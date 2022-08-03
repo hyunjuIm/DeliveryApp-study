@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DeliveryApp</string>
+    <string name="home">홈</string>
+    <string name="my">My</string>
 </resources>
