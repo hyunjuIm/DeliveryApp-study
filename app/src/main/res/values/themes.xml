@@ -1,6 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.DeliveryApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.DeliveryApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="toolbarStyle">@style/Widget.Delivery.Toolbar</item>
+        <item name="toolbarWithArrowStyle">@style/Widget.Delivery.Toolbar.WithArrow</item>
+        <item name="toolbarWithCloseStyle">@style/Widget.Delivery.Toolbar.WithClose</item>
+
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
