@@ -1,6 +1,6 @@
 package com.hyunju.deliveryapp.model
 
 enum class CellType {
-    EMPTY_CELL
-
+    EMPTY_CELL,
+    RESTAURANT_CELL
 }

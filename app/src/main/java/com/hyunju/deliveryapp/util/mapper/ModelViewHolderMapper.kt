@@ -3,12 +3,14 @@ package com.hyunju.deliveryapp.util.mapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.hyunju.deliveryapp.databinding.ViewholderEmptyBinding
+import com.hyunju.deliveryapp.databinding.ViewholderRestaurantBinding
 import com.hyunju.deliveryapp.model.CellType
 import com.hyunju.deliveryapp.model.Model
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.viewholder.EmptyViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.ModelViewHolder
+import com.hyunju.deliveryapp.widget.adapter.viewholder.restaurant.RestaurantViewHolder
 
 object ModelViewHolderMapper {
 
@@ -23,6 +25,11 @@ object ModelViewHolderMapper {
         val viewHolder = when (type) {
             CellType.EMPTY_CELL -> EmptyViewHolder(
                 ViewholderEmptyBinding.inflate(inflater, parent, false),
+                viewModel,
+                resourcesProvider
+            )
+            CellType.RESTAURANT_CELL -> RestaurantViewHolder(
+                ViewholderRestaurantBinding.inflate(inflater, parent, false),
                 viewModel,
                 resourcesProvider
             )

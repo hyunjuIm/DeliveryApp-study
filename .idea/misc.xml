@@ -7,7 +7,9 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2776268115942029" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.30344202898550726" />
         <entry key="app/src/main/res/layout/fragment_my.xml" value="0.30344202898550726" />
+        <entry key="app/src/main/res/layout/fragment_restaurant_list.xml" value="0.30344202898550726" />
         <entry key="app/src/main/res/layout/viewholder_empty.xml" value="0.30344202898550726" />
+        <entry key="app/src/main/res/layout/viewholder_restaurant.xml" value="0.30344202898550726" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.32083333333333336" />
       </map>
     </option>

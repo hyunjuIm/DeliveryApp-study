@@ -3,6 +3,7 @@ package com.hyunju.deliveryapp
 import android.app.Application
 import android.content.Context
 import com.hyunju.deliveryapp.di.appModule
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class DeliveryApplication : Application() {
@@ -12,6 +13,7 @@ class DeliveryApplication : Application() {
         appContext = this
 
         startKoin {
+            androidContext(this@DeliveryApplication)
             modules(appModule)
         }
     }
@@ -24,5 +26,7 @@ class DeliveryApplication : Application() {
     companion object {
         var appContext: Context? = null
             private set
+
+        const val APP_TAG = "보아라"
     }
 }

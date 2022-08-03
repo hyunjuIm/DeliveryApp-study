@@ -2,10 +2,12 @@ package com.hyunju.deliveryapp.widget.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
+import com.hyunju.deliveryapp.DeliveryApplication
 import com.hyunju.deliveryapp.model.CellType
 import com.hyunju.deliveryapp.model.Model
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import com.hyunju.deliveryapp.util.mapper.ModelViewHolderMapper
+import com.hyunju.deliveryapp.util.provider.DefaultResourcesProvider
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.listener.AdapterListener
 import com.hyunju.deliveryapp.widget.adapter.viewholder.ModelViewHolder
@@ -38,7 +40,7 @@ class ModelRecyclerAdapter<M : Model, VM : BaseViewModel>(
         }
     }
 
-    override fun submitList(list: MutableList<Model>?) {
+    override fun submitList(list: List<Model>?) {
         list?.let {modelList = it}
         super.submitList(list)
     }

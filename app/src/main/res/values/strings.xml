@@ -7,4 +7,10 @@
     <string name="default_order">기본 순</string>
     <string name="top_rate">별점 높은 순</string>
     <string name="initialize">초기화</string>
+
+    <!-- Restaurant Item -->
+    <string name="grade_format">%1$,.1f</string>
+    <string name="review_count">(%1$d++)</string>
+    <string name="delivery_time">%1$d~%2$d분</string>
+    <string name="delivery_tip">배달팁 %1$,d원~%2$,d원</string>
 </resources>

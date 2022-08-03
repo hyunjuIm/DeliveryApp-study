@@ -1,0 +1,11 @@
+package com.hyunju.deliveryapp.data.repository
+
+import com.hyunju.deliveryapp.data.entity.RestaurantEntity
+import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantCategory
+
+interface RestaurantRepository {
+
+    suspend fun getList(
+        restaurantCategory: RestaurantCategory,
+    ): List<RestaurantEntity>
+}
