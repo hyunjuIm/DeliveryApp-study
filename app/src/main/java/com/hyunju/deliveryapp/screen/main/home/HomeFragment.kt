@@ -2,7 +2,9 @@ package com.hyunju.deliveryapp.screen.main.home
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -14,10 +16,12 @@ import androidx.core.view.isVisible
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
+import com.hyunju.deliveryapp.data.entity.MapSearchInfoEntity
 import com.hyunju.deliveryapp.databinding.FragmentHomeBinding
 import com.hyunju.deliveryapp.screen.base.BaseFragment
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantCategory
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantListFragment
+import com.hyunju.deliveryapp.screen.mylocation.MyLocationActivity
 import com.hyunju.deliveryapp.widget.adapter.RestaurantListFragmentPagerAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -44,6 +48,16 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     private lateinit var myLocationListener: MyLocationListener
 
+    private val changeLocationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.getParcelableExtra<MapSearchInfoEntity>(HomeViewModel.MY_LOCATION_KEY)
+                    ?.let { myLocationInfo ->
+                        viewModel.loadReverseGeoInformation(myLocationInfo.locationLatLng)
+                    }
+            }
+        }
+
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val responsePermissions = permissions.entries.filter {
@@ -66,6 +80,18 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 ).show()
             }
         }
+
+    override fun initViews() = with(binding) {
+        locationTitleText.setOnClickListener {
+            viewModel.getMapSearchInfo()?.let { mapInfo ->
+                changeLocationLauncher.launch(
+                    MyLocationActivity.newIntent(
+                        requireContext(), mapInfo
+                    )
+                )
+            }
+        }
+    }
 
     private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
         val restaurantCategories = RestaurantCategory.values()
@@ -116,7 +142,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     private fun getMyLocation() {
         if (::locationManager.isInitialized.not()) {
-            locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager =
+                requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         }
         val isGpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (isGpsEnable) {

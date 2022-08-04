@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/bg_fillter_chip_state_list.xml" value="0.192" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2776268115942029" />
+        <entry key="app/src/main/res/layout/activity_my_location.xml" value="0.30344202898550726" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.30344202898550726" />
         <entry key="app/src/main/res/layout/fragment_my.xml" value="0.30344202898550726" />
         <entry key="app/src/main/res/layout/fragment_restaurant_list.xml" value="0.30344202898550726" />
