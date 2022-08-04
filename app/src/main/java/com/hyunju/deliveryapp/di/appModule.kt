@@ -1,7 +1,9 @@
 package com.hyunju.deliveryapp.di
 
-import com.hyunju.deliveryapp.data.repository.DefaultRestaurantRepository
-import com.hyunju.deliveryapp.data.repository.RestaurantRepository
+import com.hyunju.deliveryapp.data.repository.map.DefaultMapRepository
+import com.hyunju.deliveryapp.data.repository.map.MapRepository
+import com.hyunju.deliveryapp.data.repository.resaurant.DefaultRestaurantRepository
+import com.hyunju.deliveryapp.data.repository.resaurant.RestaurantRepository
 import com.hyunju.deliveryapp.screen.main.home.HomeViewModel
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantCategory
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantListViewModel
@@ -15,18 +17,21 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    viewModel { HomeViewModel() }
+    viewModel { HomeViewModel(get()) }
     viewModel { MyViewModel() }
     viewModel { (restaurantCategory: RestaurantCategory) ->
         RestaurantListViewModel(restaurantCategory, get())
     }
 
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get()) }
+    single<MapRepository> { DefaultMapRepository(get(), get()) }
 
     single { provideGsonConverterFactory() }
     single { buildOkHttpClient() }
 
-    single { provideRetrofit(get(), get()) }
+    single { provideMapRetrofit(get(), get()) }
+
+    single { provideMapApiService(get()) }
 
     single<ResourcesProvider> { DefaultResourcesProvider(androidApplication()) }
 

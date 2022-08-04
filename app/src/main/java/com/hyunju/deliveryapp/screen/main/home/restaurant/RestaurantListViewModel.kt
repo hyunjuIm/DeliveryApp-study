@@ -2,8 +2,7 @@ package com.hyunju.deliveryapp.screen.main.home.restaurant
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.hyunju.deliveryapp.data.entity.RestaurantEntity
-import com.hyunju.deliveryapp.data.repository.RestaurantRepository
+import com.hyunju.deliveryapp.data.repository.resaurant.RestaurantRepository
 import com.hyunju.deliveryapp.model.restaurant.RestaurantModel
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import kotlinx.coroutines.Job
