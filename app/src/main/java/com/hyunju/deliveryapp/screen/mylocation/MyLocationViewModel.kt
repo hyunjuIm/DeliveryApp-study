@@ -6,6 +6,7 @@ import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
 import com.hyunju.deliveryapp.data.entity.MapSearchInfoEntity
 import com.hyunju.deliveryapp.data.repository.map.MapRepository
+import com.hyunju.deliveryapp.data.repository.user.UserRepository
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import com.hyunju.deliveryapp.screen.main.home.HomeState
 import kotlinx.coroutines.Job
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class MyLocationViewModel(
     private val mapSearchInfoEntity: MapSearchInfoEntity,
     private val mapRepository: MapRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     val myLocationStateLiveData = MutableLiveData<MyLocationState>(MyLocationState.Uninitialized)
@@ -40,6 +42,7 @@ class MyLocationViewModel(
     fun confirmSelectLocation() = viewModelScope.launch {
         when (val data = myLocationStateLiveData.value) {
             is MyLocationState.Success -> {
+                userRepository.insertUserLocation(data.mapSearchInfoEntity.locationLatLng)
                 myLocationStateLiveData.value = MyLocationState.Confirm(
                     data.mapSearchInfoEntity
                 )

@@ -135,6 +135,13 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 binding.filterScrollView.isVisible = true
                 binding.viewPager.isVisible = true
                 initViewPager(it.mapSearchInfo.locationLatLng)
+                if (it.isLocationSame.not()) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.please_set_your_current_location,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
             is HomeState.Error -> {
                 binding.locationLoading.isGone = true

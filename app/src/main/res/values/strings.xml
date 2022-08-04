@@ -23,4 +23,6 @@
 
     <string name="can_not_load_address_info">위치 정보를 불러올 수 없습니다.</string>
     <string name="set_this_location">이 위치로 주소 설정</string>
+
+    <string name="please_set_your_current_location">위치가 맞는지 확인해주세요!</string>
 </resources>

@@ -6,6 +6,8 @@ import com.hyunju.deliveryapp.data.repository.map.DefaultMapRepository
 import com.hyunju.deliveryapp.data.repository.map.MapRepository
 import com.hyunju.deliveryapp.data.repository.resaurant.DefaultRestaurantRepository
 import com.hyunju.deliveryapp.data.repository.resaurant.RestaurantRepository
+import com.hyunju.deliveryapp.data.repository.user.DefaultUserRepository
+import com.hyunju.deliveryapp.data.repository.user.UserRepository
 import com.hyunju.deliveryapp.screen.main.home.HomeViewModel
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantCategory
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantListViewModel
@@ -20,17 +22,18 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
     viewModel { MyViewModel() }
     viewModel { (restaurantCategory: RestaurantCategory, locationLatLng: LocationLatLngEntity) ->
         RestaurantListViewModel(restaurantCategory, locationLatLng, get())
     }
     viewModel { (mapSearchInfoEntity: MapSearchInfoEntity) ->
-        MyLocationViewModel(mapSearchInfoEntity, get())
+        MyLocationViewModel(mapSearchInfoEntity, get(), get())
     }
 
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
     single<MapRepository> { DefaultMapRepository(get(), get()) }
+    single<UserRepository> { DefaultUserRepository(get(), get()) }
 
     single { provideGsonConverterFactory() }
     single { buildOkHttpClient() }
@@ -38,6 +41,9 @@ val appModule = module {
     single { provideMapRetrofit(get(), get()) }
 
     single { provideMapApiService(get()) }
+
+    single { provideDB(androidApplication()) }
+    single { provideLocationDao(get()) }
 
     single<ResourcesProvider> { DefaultResourcesProvider(androidApplication()) }
 
