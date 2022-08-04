@@ -1,6 +1,7 @@
 package com.hyunju.deliveryapp.data.network
 
 import com.hyunju.deliveryapp.data.reponse.address.AddressInfoResponse
+import com.hyunju.deliveryapp.data.reponse.search.SearchResponse
 import com.hyunju.deliveryapp.data.url.Key
 import com.hyunju.deliveryapp.data.url.Url
 import retrofit2.Response
@@ -28,26 +29,26 @@ interface MapApiService {
 //        @Query("centerLon") centerLon: String? = null,
 //        @Query("centerLat") centerLat: String? = null
 //    ): Response<SearchResponse>
-//
-//    @GET(Url.GET_TMAP_POIS_AROUND)
-//    suspend fun getSearchLocationAround(
-//        @Header("appKey") appKey: String = Key.TMAP_API,
-//        @Query("version") version: Int = 1,
-//        @Query("categories") categories: String? = null,
-//        @Query("callback") callback: String? = null,
-//        @Query("count") count: Int = 20,
-//        @Query("searchKeyword") keyword: String? = null,
-//        @Query("areaLLCode") areaLLCode: String? = null,
-//        @Query("areaLMCode") areaLMCode: String? = null,
-//        @Query("resCoordType") resCoordType: String? = null,
-//        @Query("searchType") searchType: String? = null,
-//        @Query("multiPoint") multiPoint: String? = null,
-//        @Query("searchtypCd") searchtypCd: String? = null,
-//        @Query("radius") radius: String? = null,
-//        @Query("reqCoordType") reqCoordType: String? = null,
-//        @Query("centerLon") centerLon: String? = null,
-//        @Query("centerLat") centerLat: String? = null
-//    ): Response<SearchResponse>
+
+    @GET(Url.GET_TMAP_POIS_AROUND)
+    suspend fun getSearchLocationAround(
+        @Header("appKey") appKey: String = Key.TMAP_API,
+        @Query("version") version: Int = 1,
+        @Query("categories") categories: String? = null,
+        @Query("callback") callback: String? = null,
+        @Query("count") count: Int = 20,
+        @Query("searchKeyword") keyword: String? = null,
+        @Query("areaLLCode") areaLLCode: String? = null,
+        @Query("areaLMCode") areaLMCode: String? = null,
+        @Query("resCoordType") resCoordType: String? = null,
+        @Query("searchType") searchType: String? = null,
+        @Query("multiPoint") multiPoint: String? = null,
+        @Query("searchtypCd") searchtypCd: String? = null,
+        @Query("radius") radius: String? = null,
+        @Query("reqCoordType") reqCoordType: String? = null,
+        @Query("centerLon") centerLon: String? = null,
+        @Query("centerLat") centerLat: String? = null
+    ): Response<SearchResponse>
 
     @GET(Url.GET_TMAP_REVERSE_GEO_CODE)
     suspend fun getReverseGeoCode(

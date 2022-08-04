@@ -1,5 +1,6 @@
 package com.hyunju.deliveryapp.di
 
+import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
 import com.hyunju.deliveryapp.data.entity.MapSearchInfoEntity
 import com.hyunju.deliveryapp.data.repository.map.DefaultMapRepository
 import com.hyunju.deliveryapp.data.repository.map.MapRepository
@@ -21,14 +22,14 @@ val appModule = module {
 
     viewModel { HomeViewModel(get()) }
     viewModel { MyViewModel() }
-    viewModel { (restaurantCategory: RestaurantCategory) ->
-        RestaurantListViewModel(restaurantCategory, get())
+    viewModel { (restaurantCategory: RestaurantCategory, locationLatLng: LocationLatLngEntity) ->
+        RestaurantListViewModel(restaurantCategory, locationLatLng, get())
     }
     viewModel { (mapSearchInfoEntity: MapSearchInfoEntity) ->
         MyLocationViewModel(mapSearchInfoEntity, get())
     }
 
-    single<RestaurantRepository> { DefaultRestaurantRepository(get(), get()) }
+    single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
     single<MapRepository> { DefaultMapRepository(get(), get()) }
 
     single { provideGsonConverterFactory() }

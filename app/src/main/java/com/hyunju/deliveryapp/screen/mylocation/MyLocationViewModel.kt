@@ -36,4 +36,15 @@ class MyLocationViewModel(
                 MyLocationState.Error(R.string.can_not_load_address_info)
         }
     }
+
+    fun confirmSelectLocation() = viewModelScope.launch {
+        when (val data = myLocationStateLiveData.value) {
+            is MyLocationState.Success -> {
+                myLocationStateLiveData.value = MyLocationState.Confirm(
+                    data.mapSearchInfoEntity
+                )
+            }
+            else -> Unit
+        }
+    }
 }
