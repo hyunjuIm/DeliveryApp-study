@@ -20,6 +20,7 @@ import com.hyunju.deliveryapp.databinding.FragmentHomeBinding
 import com.hyunju.deliveryapp.screen.base.BaseFragment
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantCategory
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantListFragment
+import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantOrder
 import com.hyunju.deliveryapp.screen.mylocation.MyLocationActivity
 import com.hyunju.deliveryapp.widget.adapter.RestaurantListFragmentPagerAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -90,12 +91,43 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 )
             }
         }
+        orderChipGroup.setOnCheckedChangeListener { _, checkId ->
+            when (checkId) {
+                R.id.chipDefault -> {
+                    chipInitialize.isGone = true
+                    changeRestaurantOrder(RestaurantOrder.DEFAULT)
+                }
+                R.id.chipInitialize -> {
+                    chipDefault.isChecked = true
+                }
+                R.id.chipLowDeliveryTip -> {
+                    chipInitialize.isVisible = true
+                    changeRestaurantOrder(RestaurantOrder.LOW_DELIVERY_TIP)
+                }
+                R.id.chipFastDelivery -> {
+                    chipInitialize.isVisible = true
+                    changeRestaurantOrder(RestaurantOrder.FAST_DELIVERY)
+                }
+                R.id.chipTopRate -> {
+                    chipInitialize.isVisible = true
+                    changeRestaurantOrder(RestaurantOrder.TOP_LATE)
+                }
+            }
+        }
+    }
+
+    private fun changeRestaurantOrder(order: RestaurantOrder) {
+        viewPagerAdapter.fragmentList.forEach {
+            it.viewModel.setRestaurantOrder(order)
+        }
     }
 
     private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
         val restaurantCategories = RestaurantCategory.values()
 
         if (::viewPagerAdapter.isInitialized.not()) {
+            orderChipGroup.isVisible = true
+
             val restaurantListFragmentList = restaurantCategories.map {
                 RestaurantListFragment.newInstance(it, locationLatLng)
             }
