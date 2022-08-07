@@ -8,6 +8,7 @@ import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
 import com.hyunju.deliveryapp.databinding.FragmentRestaurantListBinding
 import com.hyunju.deliveryapp.model.restaurant.RestaurantModel
 import com.hyunju.deliveryapp.screen.base.BaseFragment
+import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.RestaurantDetailActivity
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.ModelRecyclerAdapter
 import com.hyunju.deliveryapp.widget.adapter.listener.restaurant.RestaurantListListener
@@ -40,7 +41,12 @@ class RestaurantListFragment :
             resourcesProvider,
             adapterListener = object : RestaurantListListener {
                 override fun onClickItem(model: RestaurantModel) {
-                    Toast.makeText(requireContext(), "$model", Toast.LENGTH_SHORT).show()
+                    startActivity(
+                        RestaurantDetailActivity.newIntent(
+                            requireContext(),
+                            model.toEntity()
+                        )
+                    )
                 }
             })
     }
@@ -57,6 +63,7 @@ class RestaurantListFragment :
     companion object {
         const val RESTAURANT_CATEGORY_KEY = "restaurantCategory"
         const val LOCATION_KEY = "location"
+        const val RESTAURANT_KEY = "Restaurant"
 
         fun newInstance(
             restaurantCategory: RestaurantCategory,

@@ -25,4 +25,12 @@
     <string name="set_this_location">이 위치로 주소 설정</string>
 
     <string name="please_set_your_current_location">위치가 맞는지 확인해주세요!</string>
+
+    <!-- Restaurant Detail -->
+    <string name="call">전화</string>
+    <string name="like">찜</string>
+    <string name="share">공유</string>
+
+    <string name="delivery_expected_time">%1$d~%2$d분 소요 예정</string>
+    <string name="delivery_tip_range">%1$,d원~%2$,d원</string>
 </resources>
