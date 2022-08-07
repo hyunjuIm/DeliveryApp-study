@@ -9,3 +9,5 @@ fun provideDB(context: Context): ApplicationDatabase =
         .build()
 
 fun provideLocationDao(database: ApplicationDatabase) = database.locationDao()
+
+fun provideRestaurantDao(database: ApplicationDatabase) = database.restaurantDao()

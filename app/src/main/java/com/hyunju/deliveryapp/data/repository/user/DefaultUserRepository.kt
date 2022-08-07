@@ -1,12 +1,15 @@
 package com.hyunju.deliveryapp.data.repository.user
 
 import com.hyunju.deliveryapp.data.db.dao.LocationDao
+import com.hyunju.deliveryapp.data.db.dao.RestaurantDao
 import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
+import com.hyunju.deliveryapp.data.entity.RestaurantEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 class DefaultUserRepository(
     private val locationDao: LocationDao,
+    private val restaurantDao: RestaurantDao,
     private val ioDispatcher: CoroutineDispatcher
 ) : UserRepository {
 
@@ -18,5 +21,27 @@ class DefaultUserRepository(
         locationLatLngEntity: LocationLatLngEntity
     ) = withContext(ioDispatcher) {
         locationDao.insert(locationLatLngEntity)
+    }
+
+    override suspend fun getUserLikedRestaurant(
+        restaurantTitle: String
+    ): RestaurantEntity? = withContext(ioDispatcher) {
+        restaurantDao.get(restaurantTitle)
+    }
+
+    override suspend fun insertUserLikedRestaurant(
+        restaurantEntity: RestaurantEntity
+    ) = withContext(ioDispatcher) {
+        restaurantDao.inset(restaurantEntity)
+    }
+
+    override suspend fun deleteUserLikedRestaurant(
+        restaurantTitle: String
+    ) = withContext(ioDispatcher) {
+        restaurantDao.delete(restaurantTitle)
+    }
+
+    override suspend fun deleteAllUserLikedRestaurant() = withContext(ioDispatcher) {
+        restaurantDao.deleteAll()
     }
 }

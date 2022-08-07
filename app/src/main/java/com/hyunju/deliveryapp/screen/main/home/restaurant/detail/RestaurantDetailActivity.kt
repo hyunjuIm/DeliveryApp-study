@@ -3,6 +3,7 @@ package com.hyunju.deliveryapp.screen.main.home.restaurant.detail
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import com.google.android.material.appbar.AppBarLayout
@@ -66,7 +67,7 @@ class RestaurantDetailActivity :
             }
         }
         likeButton.setOnClickListener {
-
+            viewModel.toggleLikedRestaurant()
         }
         shareButton.setOnClickListener {
 
