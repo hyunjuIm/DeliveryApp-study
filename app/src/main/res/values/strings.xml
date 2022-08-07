@@ -33,4 +33,7 @@
 
     <string name="delivery_expected_time">%1$d~%2$d분 소요 예정</string>
     <string name="delivery_tip_range">%1$,d원~%2$,d원</string>
+
+    <!-- menu -->
+    <string name="price">%d,원</string>
 </resources>

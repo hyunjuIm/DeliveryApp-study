@@ -3,6 +3,7 @@ package com.hyunju.deliveryapp.screen.main.home.restaurant.detail
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hyunju.deliveryapp.data.entity.RestaurantEntity
+import com.hyunju.deliveryapp.data.repository.resaurant.food.RestaurantFoodRepository
 import com.hyunju.deliveryapp.data.repository.user.UserRepository
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import kotlinx.coroutines.Job
@@ -10,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class RestaurantDetailViewModel(
     private val restaurantEntity: RestaurantEntity,
+    private val restaurantFoodRepository: RestaurantFoodRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel() {
 
@@ -21,11 +23,14 @@ class RestaurantDetailViewModel(
             restaurantEntity = restaurantEntity
         )
         restaurantDetailStateLiveData.value = RestaurantDetailState.Loading
+        val foods =
+            restaurantFoodRepository.getFoods(restaurantId = restaurantEntity.restaurantInfoId)
         val isLiked =
             userRepository.getUserLikedRestaurant(restaurantEntity.restaurantTitle) != null
         restaurantDetailStateLiveData.value = RestaurantDetailState.Success(
             restaurantEntity = restaurantEntity,
-            isLiked = isLiked
+            isLiked = isLiked,
+            restaurantFoodList = foods
         )
     }
 
