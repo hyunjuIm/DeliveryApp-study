@@ -151,39 +151,61 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         }
     }
 
-    override fun observeData() = viewModel.homeStateLiveData.observe(viewLifecycleOwner) {
-        when (it) {
-            is HomeState.Uninitialized -> {
-                getMyLocation()
-            }
-            is HomeState.Loading -> {
-                binding.locationLoading.isVisible = true
-                binding.locationTitleText.text = getString(R.string.loading)
-            }
-            is HomeState.Success -> {
-                binding.locationLoading.isGone = true
-                binding.locationTitleText.text = it.mapSearchInfo.fullAddress
-                binding.tabLayout.isVisible = true
-                binding.filterScrollView.isVisible = true
-                binding.viewPager.isVisible = true
-                initViewPager(it.mapSearchInfo.locationLatLng)
-                if (it.isLocationSame.not()) {
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.please_set_your_current_location,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-            is HomeState.Error -> {
-                binding.locationLoading.isGone = true
-                binding.locationTitleText.text = getString(R.string.location_not_found)
-                binding.locationTitleText.setOnClickListener {
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkMyBasket()
+    }
+
+    override fun observeData() {
+
+        viewModel.homeStateLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is HomeState.Uninitialized -> {
                     getMyLocation()
                 }
-                Toast.makeText(requireContext(), it.messageId, Toast.LENGTH_SHORT).show()
+                is HomeState.Loading -> {
+                    binding.locationLoading.isVisible = true
+                    binding.locationTitleText.text = getString(R.string.loading)
+                }
+                is HomeState.Success -> {
+                    binding.locationLoading.isGone = true
+                    binding.locationTitleText.text = it.mapSearchInfo.fullAddress
+                    binding.tabLayout.isVisible = true
+                    binding.filterScrollView.isVisible = true
+                    binding.viewPager.isVisible = true
+                    initViewPager(it.mapSearchInfo.locationLatLng)
+                    if (it.isLocationSame.not()) {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.please_set_your_current_location,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                is HomeState.Error -> {
+                    binding.locationLoading.isGone = true
+                    binding.locationTitleText.text = getString(R.string.location_not_found)
+                    binding.locationTitleText.setOnClickListener {
+                        getMyLocation()
+                    }
+                    Toast.makeText(requireContext(), it.messageId, Toast.LENGTH_SHORT).show()
+                }
             }
         }
+
+        viewModel.foodMenuBasketLiveData.observe(this) {
+            if (it.isNotEmpty()) {
+                binding.basketButtonContainer.isVisible = true
+                binding.basketCountTextView.text = getString(R.string.basket_count, it.size)
+                binding.basketButton.setOnClickListener {
+
+                }
+            } else {
+                binding.basketButtonContainer.isGone = true
+                binding.basketButton.setOnClickListener(null)
+            }
+        }
+
     }
 
     private fun getMyLocation() {

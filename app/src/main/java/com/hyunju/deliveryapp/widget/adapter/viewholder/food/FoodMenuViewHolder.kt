@@ -9,6 +9,7 @@ import com.hyunju.deliveryapp.model.restaurant.food.FoodModel
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.listener.AdapterListener
+import com.hyunju.deliveryapp.widget.adapter.listener.restaurant.FoodMenuListListener
 import com.hyunju.deliveryapp.widget.adapter.viewholder.ModelViewHolder
 
 class FoodMenuViewHolder(
@@ -32,7 +33,11 @@ class FoodMenuViewHolder(
     }
 
     override fun bindViews(model: FoodModel, adapterListener: AdapterListener) {
+        if (adapterListener is FoodMenuListListener) {
+            binding.root.setOnClickListener {
+                adapterListener.onClickItem(model)
+            }
+        }
     }
-
 
 }
