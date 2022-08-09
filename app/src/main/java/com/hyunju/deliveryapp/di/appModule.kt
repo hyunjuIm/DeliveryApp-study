@@ -10,6 +10,8 @@ import com.hyunju.deliveryapp.data.repository.resaurant.DefaultRestaurantReposit
 import com.hyunju.deliveryapp.data.repository.resaurant.RestaurantRepository
 import com.hyunju.deliveryapp.data.repository.resaurant.food.DefaultRestaurantFoodRepository
 import com.hyunju.deliveryapp.data.repository.resaurant.food.RestaurantFoodRepository
+import com.hyunju.deliveryapp.data.repository.resaurant.review.DefaultRestaurantReviewRepository
+import com.hyunju.deliveryapp.data.repository.resaurant.review.RestaurantReviewRepository
 import com.hyunju.deliveryapp.data.repository.user.DefaultUserRepository
 import com.hyunju.deliveryapp.data.repository.user.UserRepository
 import com.hyunju.deliveryapp.screen.main.home.HomeViewModel
@@ -44,13 +46,13 @@ val appModule = module {
     viewModel { (restaurantId: Long, restaurantFoodList: List<RestaurantFoodEntity>) ->
         RestaurantMenuListViewModel(restaurantId, restaurantFoodList, get())
     }
-
-    viewModel { RestaurantReviewListViewModel() }
+    viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
 
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
     single<MapRepository> { DefaultMapRepository(get(), get()) }
     single<UserRepository> { DefaultUserRepository(get(), get(), get()) }
     single<RestaurantFoodRepository> { DefaultRestaurantFoodRepository(get(), get(), get()) }
+    single<RestaurantReviewRepository> { DefaultRestaurantReviewRepository(get()) }
 
     single { provideGsonConverterFactory() }
     single { buildOkHttpClient() }
