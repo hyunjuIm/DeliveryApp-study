@@ -8,8 +8,10 @@ import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.data.entity.RestaurantEntity
 import com.hyunju.deliveryapp.data.entity.RestaurantFoodEntity
@@ -17,10 +19,15 @@ import com.hyunju.deliveryapp.databinding.ActivityRestaurantDetailBinding
 import com.hyunju.deliveryapp.extensions.fromDpToPx
 import com.hyunju.deliveryapp.extensions.load
 import com.hyunju.deliveryapp.screen.base.BaseActivity
+import com.hyunju.deliveryapp.screen.main.MainTabMenu
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantListFragment
 import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.menu.RestaurantMenuListFragment
 import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.review.RestaurantReviewListFragment
+import com.hyunju.deliveryapp.screen.order.OrderMenuListActivity
+import com.hyunju.deliveryapp.util.event.MenuChangeEventBus
 import com.hyunju.deliveryapp.widget.adapter.RestaurantDetailListFragmentPagerAdapter
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.abs
@@ -43,6 +50,10 @@ class RestaurantDetailActivity :
 
     override fun getViewBinding(): ActivityRestaurantDetailBinding =
         ActivityRestaurantDetailBinding.inflate(layoutInflater)
+
+    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
+
+    private val menuChangeEventBus by inject<MenuChangeEventBus>()
 
     override fun initViews() {
         initAppBar()
@@ -198,8 +209,34 @@ class RestaurantDetailActivity :
             getString(R.string.basket_count, foodMenuListInBasket.size)
         }
         basketButton.setOnClickListener {
-
+            if (firebaseAuth.currentUser == null) {
+                alertLoginNeed {
+                    lifecycleScope.launch {
+                        menuChangeEventBus.changeMenu(MainTabMenu.MY)
+                        finish()
+                    }
+                }
+            } else {
+                startActivity(
+                    OrderMenuListActivity.newIntent(this@RestaurantDetailActivity)
+                )
+            }
         }
+    }
+
+    private fun alertLoginNeed(afterAction: () -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle("로그인이 필요합니다.")
+            .setMessage("주문하려면 로그인이 필요합니다. My탭으로 이동하시겠습니까?")
+            .setPositiveButton("이동") { dialog, _ ->
+                afterAction()
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun alertClearNeedInBasket(afterAction: () -> Unit) {

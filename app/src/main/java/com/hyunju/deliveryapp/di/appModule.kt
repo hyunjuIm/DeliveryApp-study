@@ -24,6 +24,8 @@ import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.review.Restaura
 import com.hyunju.deliveryapp.screen.main.like.RestaurantLikeListViewModel
 import com.hyunju.deliveryapp.screen.main.my.MyViewModel
 import com.hyunju.deliveryapp.screen.mylocation.MyLocationViewModel
+import com.hyunju.deliveryapp.screen.order.OrderMenuListViewModel
+import com.hyunju.deliveryapp.util.event.MenuChangeEventBus
 import com.hyunju.deliveryapp.util.provider.DefaultResourcesProvider
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +38,8 @@ val appModule = module {
 
     viewModel { HomeViewModel(get(), get(), get()) }
     viewModel { MyViewModel(get()) }
+    viewModel { RestaurantLikeListViewModel(get()) }
+
     viewModel { (restaurantCategory: RestaurantCategory, locationLatLng: LocationLatLngEntity) ->
         RestaurantListViewModel(restaurantCategory, locationLatLng, get())
     }
@@ -49,7 +53,8 @@ val appModule = module {
         RestaurantMenuListViewModel(restaurantId, restaurantFoodList, get())
     }
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
-    viewModel { RestaurantLikeListViewModel(get()) }
+
+    viewModel { OrderMenuListViewModel(get()) }
 
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
     single<MapRepository> { DefaultMapRepository(get(), get()) }
@@ -76,4 +81,6 @@ val appModule = module {
 
     single { Dispatchers.IO }
     single { Dispatchers.Main }
+
+    single { MenuChangeEventBus() }
 }

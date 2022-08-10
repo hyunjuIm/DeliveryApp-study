@@ -3,6 +3,7 @@ package com.hyunju.deliveryapp.screen.main.home
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.location.Location
 import android.location.LocationListener
@@ -13,15 +14,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
 import com.hyunju.deliveryapp.data.entity.MapSearchInfoEntity
 import com.hyunju.deliveryapp.databinding.FragmentHomeBinding
 import com.hyunju.deliveryapp.screen.base.BaseFragment
+import com.hyunju.deliveryapp.screen.main.MainActivity
+import com.hyunju.deliveryapp.screen.main.MainTabMenu
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantCategory
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantListFragment
 import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantOrder
 import com.hyunju.deliveryapp.screen.mylocation.MyLocationActivity
+import com.hyunju.deliveryapp.screen.order.OrderMenuListActivity
 import com.hyunju.deliveryapp.widget.adapter.RestaurantListFragmentPagerAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -47,6 +52,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     private lateinit var locationManager: LocationManager
 
     private lateinit var myLocationListener: MyLocationListener
+
+    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     private val changeLocationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -157,7 +164,6 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     }
 
     override fun observeData() {
-
         viewModel.homeStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is HomeState.Uninitialized -> {
@@ -198,7 +204,15 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 binding.basketButtonContainer.isVisible = true
                 binding.basketCountTextView.text = getString(R.string.basket_count, it.size)
                 binding.basketButton.setOnClickListener {
-
+                    if (firebaseAuth.currentUser == null) {
+                        alertLoginNeed {
+                            (requireActivity() as MainActivity).goToTab(MainTabMenu.MY)
+                        }
+                    } else {
+                        startActivity(
+                            OrderMenuListActivity.newIntent(requireContext())
+                        )
+                    }
                 }
             } else {
                 binding.basketButtonContainer.isGone = true
@@ -206,6 +220,21 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             }
         }
 
+    }
+
+    private fun alertLoginNeed(afterAction: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("로그인이 필요합니다.")
+            .setMessage("주문하려면 로그인이 필요합니다. My탭으로 이동하시겠습니까?")
+            .setPositiveButton("이동") { dialog, _ ->
+                afterAction()
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun getMyLocation() {

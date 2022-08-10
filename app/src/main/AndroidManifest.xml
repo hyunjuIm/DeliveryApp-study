@@ -34,6 +34,9 @@
         <activity
             android:name=".screen.main.home.restaurant.detail.RestaurantDetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".screen.order.OrderMenuListActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
