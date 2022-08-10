@@ -41,6 +41,11 @@ class RestaurantLikeListFragment :
             })
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchData()
+    }
+
     override fun initViews() {
         binding.recyclerView.adapter = adapter
     }
