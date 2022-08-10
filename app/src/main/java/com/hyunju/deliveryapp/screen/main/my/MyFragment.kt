@@ -13,7 +13,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.databinding.FragmentMyBinding
 import com.hyunju.deliveryapp.extensions.load
+import com.hyunju.deliveryapp.model.restaurant.order.OrderModel
 import com.hyunju.deliveryapp.screen.base.BaseFragment
+import com.hyunju.deliveryapp.util.provider.ResourcesProvider
+import com.hyunju.deliveryapp.widget.adapter.ModelRecyclerAdapter
+import com.hyunju.deliveryapp.widget.adapter.listener.AdapterListener
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
@@ -45,8 +50,17 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
                     e.printStackTrace()
                 }
             }
-
         }
+
+    private val resourcesProvider by inject<ResourcesProvider>()
+
+    private val adapter by lazy {
+        ModelRecyclerAdapter<OrderModel, MyViewModel>(
+            listOf(),
+            viewModel,
+            resourcesProvider,
+            object : AdapterListener {})
+    }
 
     override fun initViews() = with(binding) {
         loginButton.setOnClickListener {
@@ -56,6 +70,7 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
             firebaseAuth.signOut()
             viewModel.signOut()
         }
+        recyclerView.adapter = adapter
     }
 
     private fun signInGoogle() {
@@ -96,7 +111,7 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
         loginRequiredGroup.isGone = true
         profileImageView.load(state.profileImageUri.toString(), 60f)
         userNameTextView.text = state.userName
-        Toast.makeText(requireContext(), state.orderList.toString(), Toast.LENGTH_SHORT).show()
+        adapter.submitList(state.orderList)
     }
 
     private fun handleLoginState(state: MyState.Login) {

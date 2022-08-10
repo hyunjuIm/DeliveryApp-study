@@ -53,4 +53,5 @@
     <!-- Error -->
     <string name="request_error">요청했지만 예상치 못한 이슈가 발생했습니다 : %s</string>
     <string name="user_id_not_found">사용자 id가 존재하지 않습니다.</string>
+    <string name="order_history_title">주문내역 : %s</string>
 </resources>

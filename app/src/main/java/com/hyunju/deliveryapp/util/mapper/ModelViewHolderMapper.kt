@@ -11,6 +11,7 @@ import com.hyunju.deliveryapp.widget.adapter.viewholder.EmptyViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.ModelViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.food.FoodMenuViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.order.OrderMenuViewHolder
+import com.hyunju.deliveryapp.widget.adapter.viewholder.order.OrderViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.restaurant.LikeRestaurantViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.restaurant.RestaurantViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.review.RestaurantReviewViewHolder
@@ -53,6 +54,11 @@ object ModelViewHolderMapper {
             )
             CellType.ORDER_FOOD_CELL -> OrderMenuViewHolder(
                 ViewholderOrderMenuBinding.inflate(inflater, parent, false),
+                viewModel,
+                resourcesProvider
+            )
+            CellType.ORDER_CELL -> OrderViewHolder(
+                ViewholderOrderBinding.inflate(inflater, parent, false),
                 viewModel,
                 resourcesProvider
             )

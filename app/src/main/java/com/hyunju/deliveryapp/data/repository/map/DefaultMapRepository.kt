@@ -19,7 +19,6 @@ class DefaultMapRepository(
             lat = locationLatLngEntity.latitude,
             lon = locationLatLngEntity.longitude
         )
-        Log.d("으악", "$response, ${response.body()}, ${response.message()}")
         if (response.isSuccessful) {
             response.body()?.addressInfo
         } else {
