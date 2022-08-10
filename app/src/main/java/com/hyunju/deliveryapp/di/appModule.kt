@@ -21,6 +21,7 @@ import com.hyunju.deliveryapp.screen.main.home.restaurant.RestaurantListViewMode
 import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.RestaurantDetailViewModel
 import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.menu.RestaurantMenuListViewModel
 import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.review.RestaurantReviewListViewModel
+import com.hyunju.deliveryapp.screen.main.like.RestaurantLikeListViewModel
 import com.hyunju.deliveryapp.screen.main.my.MyViewModel
 import com.hyunju.deliveryapp.screen.mylocation.MyLocationViewModel
 import com.hyunju.deliveryapp.util.provider.DefaultResourcesProvider
@@ -48,6 +49,7 @@ val appModule = module {
         RestaurantMenuListViewModel(restaurantId, restaurantFoodList, get())
     }
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
+    viewModel { RestaurantLikeListViewModel(get()) }
 
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
     single<MapRepository> { DefaultMapRepository(get(), get()) }

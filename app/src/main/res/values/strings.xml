@@ -41,4 +41,6 @@
     <string name="logout">로그아웃</string>
     <string name="empty_orders_text">주문 리스트가 존재하지 않습니다.</string>
     <string name="google_login_required_text">구글 로그인이 필요합니다.</string>
+    <string name="restaurant_like_list">찜 리스트</string>
+    <string name="empty_like_restaurant_list">찜한 내역이 존재하지 않습니다.</string>
 </resources>
