@@ -1,6 +1,7 @@
 package com.hyunju.deliveryapp.screen.main.my
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -95,6 +96,7 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
         loginRequiredGroup.isGone = true
         profileImageView.load(state.profileImageUri.toString(), 60f)
         userNameTextView.text = state.userName
+        Toast.makeText(requireContext(), state.orderList.toString(), Toast.LENGTH_SHORT).show()
     }
 
     private fun handleLoginState(state: MyState.Login) {

@@ -1,5 +1,7 @@
 package com.hyunju.deliveryapp.di
 
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
 import com.hyunju.deliveryapp.data.entity.MapSearchInfoEntity
 import com.hyunju.deliveryapp.data.entity.RestaurantEntity
@@ -7,6 +9,8 @@ import com.hyunju.deliveryapp.data.entity.RestaurantFoodEntity
 import com.hyunju.deliveryapp.data.preference.AppPreferenceManager
 import com.hyunju.deliveryapp.data.repository.map.DefaultMapRepository
 import com.hyunju.deliveryapp.data.repository.map.MapRepository
+import com.hyunju.deliveryapp.data.repository.order.DefaultOrderRepository
+import com.hyunju.deliveryapp.data.repository.order.OrderRepository
 import com.hyunju.deliveryapp.data.repository.resaurant.DefaultRestaurantRepository
 import com.hyunju.deliveryapp.data.repository.resaurant.RestaurantRepository
 import com.hyunju.deliveryapp.data.repository.resaurant.food.DefaultRestaurantFoodRepository
@@ -37,7 +41,7 @@ import org.koin.dsl.module
 val appModule = module {
 
     viewModel { HomeViewModel(get(), get(), get()) }
-    viewModel { MyViewModel(get()) }
+    viewModel { MyViewModel(get(), get(), get()) }
     viewModel { RestaurantLikeListViewModel(get()) }
 
     viewModel { (restaurantCategory: RestaurantCategory, locationLatLng: LocationLatLngEntity) ->
@@ -54,13 +58,14 @@ val appModule = module {
     }
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
 
-    viewModel { OrderMenuListViewModel(get()) }
+    viewModel { OrderMenuListViewModel(get(), get()) }
 
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
     single<MapRepository> { DefaultMapRepository(get(), get()) }
     single<UserRepository> { DefaultUserRepository(get(), get(), get()) }
     single<RestaurantFoodRepository> { DefaultRestaurantFoodRepository(get(), get(), get()) }
     single<RestaurantReviewRepository> { DefaultRestaurantReviewRepository(get()) }
+    single<OrderRepository> { DefaultOrderRepository(get(), get()) }
 
     single { provideGsonConverterFactory() }
     single { buildOkHttpClient() }
@@ -83,4 +88,7 @@ val appModule = module {
     single { Dispatchers.Main }
 
     single { MenuChangeEventBus() }
+
+    single { Firebase.firestore }
+
 }

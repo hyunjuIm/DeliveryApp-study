@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "513900358017",
-    "project_id": "delivery-app-694e1",
-    "storage_bucket": "delivery-app-694e1.appspot.com"
+    "project_number": "946362776097",
+    "project_id": "delivery-cdb94",
+    "storage_bucket": "delivery-cdb94.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:513900358017:android:b3f94d122b5d3d8579e080",
+        "mobilesdk_app_id": "1:946362776097:android:22520f6e72225868d44160",
         "android_client_info": {
           "package_name": "com.hyunju.deliveryapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "513900358017-g23bu21pjv68d2mrucmb124r00gknuam.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.hyunju.deliveryapp",
-            "certificate_hash": "2b4e5640e9b0fbc0a90e820a45af2235efdff901"
-          }
-        },
-        {
-          "client_id": "513900358017-o3b3uvg839u4lhd1sid7f6t33air23nd.apps.googleusercontent.com",
+          "client_id": "946362776097-c9suopvlnre4ta0tm6hesdcvikapolm9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAW9ZUS42i0NbUCeigxcdo49NHP3HaByFo"
+          "current_key": "AIzaSyBVKl0mml9G7cAUsGCWIoGCE65QznMDpcs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "513900358017-o3b3uvg839u4lhd1sid7f6t33air23nd.apps.googleusercontent.com",
+              "client_id": "946362776097-c9suopvlnre4ta0tm6hesdcvikapolm9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

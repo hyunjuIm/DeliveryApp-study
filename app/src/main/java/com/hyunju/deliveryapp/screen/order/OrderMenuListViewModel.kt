@@ -3,6 +3,9 @@ package com.hyunju.deliveryapp.screen.order
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.hyunju.deliveryapp.R
+import com.hyunju.deliveryapp.data.repository.order.DefaultOrderRepository
+import com.hyunju.deliveryapp.data.repository.order.OrderRepository
 import com.hyunju.deliveryapp.data.repository.resaurant.food.RestaurantFoodRepository
 import com.hyunju.deliveryapp.model.CellType
 import com.hyunju.deliveryapp.model.restaurant.food.FoodModel
@@ -11,7 +14,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class OrderMenuListViewModel(
-    private val restaurantFoodRepository: RestaurantFoodRepository
+    private val restaurantFoodRepository: RestaurantFoodRepository,
+    private val orderRepository: OrderRepository
 ) : BaseViewModel() {
 
     private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
@@ -37,15 +41,38 @@ class OrderMenuListViewModel(
         )
     }
 
-    fun orderMenu() {
-
+    fun clearOrderMenu() = viewModelScope.launch {
+        restaurantFoodRepository.clearFoodMenuListInBasket()
+        fetchData()
     }
 
-    fun clearOrderMenu() {
-
+    fun removeOrderMenu(model: FoodModel) = viewModelScope.launch {
+        restaurantFoodRepository.removeFoodMenuListInBasket(model.foodId)
+        fetchData()
     }
 
-    fun removeOrderMenu(model: FoodModel) {
-
+    fun orderMenu() = viewModelScope.launch {
+        val foodMenuList = restaurantFoodRepository.getAllFoodMenuListInBasket()
+        if (foodMenuList.isNotEmpty()) {
+            val restaurantId = foodMenuList.first().restaurantId
+            firebaseAuth.currentUser?.let { user ->
+                when (val data = orderRepository.orderMenu(user.uid, restaurantId, foodMenuList)) {
+                    is DefaultOrderRepository.Result.Success<*> -> {
+                        restaurantFoodRepository.clearFoodMenuListInBasket()
+                        orderMenuStateLiveData.value = OrderMenuState.Order
+                    }
+                    is DefaultOrderRepository.Result.Error -> {
+                        orderMenuStateLiveData.value = OrderMenuState.Error(
+                            R.string.request_error, data.e
+                        )
+                    }
+                }
+            } ?: run {
+                orderMenuStateLiveData.value = OrderMenuState.Error(
+                    R.string.user_id_not_found, IllegalAccessError()
+                )
+            }
+        }
     }
+
 }

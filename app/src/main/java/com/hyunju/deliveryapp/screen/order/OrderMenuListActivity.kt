@@ -58,8 +58,12 @@ class OrderMenuListActivity : BaseActivity<OrderMenuListViewModel, ActivityOrder
             is OrderMenuState.Success -> {
                 handleSuccess(it)
             }
-            is OrderMenuState.Order -> TODO()
-            is OrderMenuState.Error -> TODO()
+            is OrderMenuState.Order -> {
+                handleOrder()
+            }
+            is OrderMenuState.Error -> {
+                handleError(it)
+            }
             else -> Unit
         }
     }
@@ -76,8 +80,22 @@ class OrderMenuListActivity : BaseActivity<OrderMenuListViewModel, ActivityOrder
         if (menuOrderIsEmpty) {
             Toast.makeText(this@OrderMenuListActivity, "주문 메뉴가 없어 화면을 종료합니다.", Toast.LENGTH_SHORT)
                 .show()
+            finish()
         }
     }
 
+    private fun handleOrder() {
+        Toast.makeText(this@OrderMenuListActivity, "성공적으로 주문을 완료하셨습니다.", Toast.LENGTH_SHORT)
+            .show()
+        finish()
+    }
+
+    private fun handleError(state: OrderMenuState.Error) {
+        Toast.makeText(
+            this@OrderMenuListActivity,
+            getString(state.messageId, state.e),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 
 }
