@@ -15,9 +15,11 @@ import com.hyunju.deliveryapp.databinding.FragmentMyBinding
 import com.hyunju.deliveryapp.extensions.load
 import com.hyunju.deliveryapp.model.restaurant.order.OrderModel
 import com.hyunju.deliveryapp.screen.base.BaseFragment
+import com.hyunju.deliveryapp.screen.review.AddRestaurantReviewActivity
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.ModelRecyclerAdapter
 import com.hyunju.deliveryapp.widget.adapter.listener.AdapterListener
+import com.hyunju.deliveryapp.widget.adapter.listener.order.OrderListListener
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -59,7 +61,17 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
             listOf(),
             viewModel,
             resourcesProvider,
-            object : AdapterListener {})
+            object : OrderListListener {
+                override fun writeRestaurantReview(orderId: String, restaurantTitle: String) {
+                    startActivity(
+                        AddRestaurantReviewActivity.newIntent(
+                            requireContext(),
+                            orderId,
+                            restaurantTitle
+                        )
+                    )
+                }
+            })
     }
 
     override fun initViews() = with(binding) {
