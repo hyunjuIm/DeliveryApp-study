@@ -70,6 +70,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         binding.bottomNav.selectedItemId = mainTabMenu.menuId
     }
 
+    // commit() 된 transaction 은 바로 실행되지 않고, 메인스레드에 schedule 되어 처리된다.
+    // commit() 은 activity 가 state save 하기 전에 이루어져야 하는데, state save 후에 commit() 이 호출되면 exception 이 발생한다.
+    // 만약 state save 와 관계없이, fragment 의 state 저장과 관련없게 작동하게 하려면 commitAllowingStateLoss() 를 호출해줘야 한다.
     private fun showFragment(fragment: Fragment, tag: String) {
         val findFragment = supportFragmentManager.findFragmentByTag(tag)
         supportFragmentManager.fragments.forEach { fm ->

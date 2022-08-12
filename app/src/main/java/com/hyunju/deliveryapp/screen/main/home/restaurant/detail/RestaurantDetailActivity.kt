@@ -100,6 +100,7 @@ class RestaurantDetailActivity :
                                 "\n연락처 : ${restaurantInfo.restaurantTelNumber}"
 
                     )
+                    // 다른 앱으로 간단한 데이터 보내기
                     Intent.createChooser(this, "친구에게 공유하기")
                 }
                 startActivity(intent)
