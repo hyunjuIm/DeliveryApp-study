@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import com.hyunju.deliveryapp.model.restaurant.review.gallery.GalleryPhotoModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -12,8 +13,8 @@ internal class GalleryPhotoRepository(
     private val context: Context
 ) {
 
-    suspend fun getAllPhotos(): MutableList<GalleryPhoto> = withContext(Dispatchers.IO) {
-        val galleryPhotoList = mutableListOf<GalleryPhoto>()
+    suspend fun getAllPhotos(): MutableList<GalleryPhotoModel> = withContext(Dispatchers.IO) {
+        val galleryPhotoModelList = mutableListOf<GalleryPhotoModel>()
         val uriExternal: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val query: Cursor?
         val projection = arrayOf(
@@ -46,8 +47,8 @@ internal class GalleryPhotoRepository(
 
                 val contentUri = ContentUris.withAppendedId(uriExternal, id)
 
-                galleryPhotoList.add(
-                    GalleryPhoto(
+                galleryPhotoModelList.add(
+                    GalleryPhotoModel(
                         id = id,
                         uri = contentUri,
                         name = name,
@@ -58,6 +59,6 @@ internal class GalleryPhotoRepository(
             }
         }
 
-        galleryPhotoList
+        galleryPhotoModelList
     }
 }

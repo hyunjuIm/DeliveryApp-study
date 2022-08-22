@@ -2,15 +2,20 @@ package com.hyunju.deliveryapp.screen.review.gallery
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.databinding.ActivityGalleryBinding
+import com.hyunju.deliveryapp.model.restaurant.review.gallery.GalleryPhotoModel
+import com.hyunju.deliveryapp.screen.base.BaseActivity
+import com.hyunju.deliveryapp.util.provider.ResourcesProvider
+import com.hyunju.deliveryapp.widget.adapter.ModelRecyclerAdapter
+import com.hyunju.deliveryapp.widget.adapter.listener.review.gallery.GalleryListener
+import org.koin.android.ext.android.inject
 
-class GalleryActivity : AppCompatActivity() {
+class GalleryActivity : BaseActivity<GalleryViewModel, ActivityGalleryBinding>() {
 
     companion object {
         fun newIntent(activity: Activity) = Intent(activity, GalleryActivity::class.java)
@@ -18,12 +23,23 @@ class GalleryActivity : AppCompatActivity() {
         private const val URI_LIST_KEY = "uriList"
     }
 
-    private val viewModel by viewModels<GalleryViewModel>()
+    override val viewModel by viewModels<GalleryViewModel>()
 
-    private lateinit var binding: ActivityGalleryBinding
+    override fun getViewBinding(): ActivityGalleryBinding =
+        ActivityGalleryBinding.inflate(layoutInflater)
 
-    private val adapter = GalleryPhotoListAdapter{
-        viewModel.selectPhoto(it)
+    private val resourcesProvider: ResourcesProvider by inject()
+
+    private val adapter by lazy {
+        ModelRecyclerAdapter<GalleryPhotoModel, GalleryViewModel>(
+            listOf(),
+            viewModel,
+            resourcesProvider,
+            adapterListener = object : GalleryListener {
+                override fun checkPhotoItem(photo: GalleryPhotoModel) {
+                    viewModel.selectPhoto(photo)
+                }
+            })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +49,10 @@ class GalleryActivity : AppCompatActivity() {
 
         viewModel.fetchData()
         initViews()
-        observeState()
+        observeData()
     }
 
-    private fun initViews() = with(binding) {
+    override fun initViews() = with(binding) {
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(
             GridDividerDecoration(
@@ -49,7 +65,7 @@ class GalleryActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeState() = viewModel.galleryStateLiveData.observe(this) {
+    override fun observeData() = viewModel.galleryStateLiveData.observe(this) {
         when (it) {
             is GalleryState.Loading -> handleLoading()
             is GalleryState.Success -> handleSuccess(it)
@@ -66,7 +82,9 @@ class GalleryActivity : AppCompatActivity() {
     private fun handleSuccess(state: GalleryState.Success) = with(binding) {
         progressBar.isGone = true
         recyclerView.isVisible = true
-        adapter.setPhotoList(state.photoList)
+
+        adapter.submitList(state.photoList)
+        adapter.notifyDataSetChanged()
     }
 
     private fun handleConfirm(state: GalleryState.Confirm) {
@@ -75,4 +93,5 @@ class GalleryActivity : AppCompatActivity() {
         })
         finish()
     }
+
 }

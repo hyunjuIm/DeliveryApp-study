@@ -1,59 +1,44 @@
 package com.hyunju.deliveryapp.screen.review.gallery
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hyunju.deliveryapp.DeliveryApplication.Companion.appContext
+import com.hyunju.deliveryapp.model.restaurant.review.gallery.GalleryPhotoModel
+import com.hyunju.deliveryapp.screen.base.BaseViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class GalleryViewModel : ViewModel() {
+class GalleryViewModel : BaseViewModel() {
 
     private val galleryPhotoRepository by lazy { GalleryPhotoRepository(appContext!!) }
 
-    private lateinit var photoList: MutableList<GalleryPhoto>
+    private lateinit var photoList: MutableList<GalleryPhotoModel>
 
     val galleryStateLiveData = MutableLiveData<GalleryState>(GalleryState.Uninitialized)
 
-    fun fetchData() = viewModelScope.launch {
-        setState(
-            GalleryState.Loading
-        )
+    override fun fetchData(): Job = viewModelScope.launch {
+        galleryStateLiveData.value = GalleryState.Loading
         photoList = galleryPhotoRepository.getAllPhotos()
-        setState(
-            GalleryState.Success(
-                photoList
-            )
+        galleryStateLiveData.value = GalleryState.Success(
+            photoList = photoList
         )
     }
 
-    fun selectPhoto(galleryPhoto: GalleryPhoto) {
-        val findGalleryPhoto = photoList.find { it.id == galleryPhoto.id }
+    fun selectPhoto(galleryPhotoModel: GalleryPhotoModel) {
+        val findGalleryPhoto = photoList.find { it.id == galleryPhotoModel.id }
         findGalleryPhoto?.let { photo ->
-            photoList[photoList.indexOf(photo)] =
-                photo.copy(
-                    isSelected = photo.isSelected.not()
-                )
-            setState(
-                GalleryState.Success(
-                    photoList
-                )
+            photoList[photoList.indexOf(photo)] = photo.copy(isSelected = photo.isSelected.not())
+            galleryStateLiveData.value = GalleryState.Success(
+                photoList = photoList
             )
         }
     }
 
     fun confirmCheckedPhotos() {
-        setState(
-            GalleryState.Loading
+        galleryStateLiveData.value = GalleryState.Loading
+        galleryStateLiveData.value = GalleryState.Confirm(
+            photoList = photoList.filter { it.isSelected }
         )
-        setState(
-            GalleryState.Confirm(
-                photoList = photoList.filter { it.isSelected }
-            )
-        )
-    }
-
-    private fun setState(state: GalleryState) {
-        galleryStateLiveData.postValue(state)
     }
 
 }
