@@ -20,7 +20,7 @@ class ImagePreviewListActivity : AppCompatActivity() {
     companion object {
         const val URI_LIST_KEY = "uriList"
 
-        const val IMAGE_LIST_REQUEST_CODE = 100
+        const val IMAGE_LIST_REQUEST_CODE = 100000
 
         fun newIntent(activity: Activity, uriList: List<Uri>) =
             Intent(activity, ImagePreviewListActivity::class.java).apply {
