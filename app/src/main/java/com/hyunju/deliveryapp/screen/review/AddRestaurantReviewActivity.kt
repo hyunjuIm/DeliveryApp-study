@@ -17,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.hyunju.deliveryapp.data.entity.ReviewEntity
 import com.hyunju.deliveryapp.databinding.ActivityAddRestaurantReviewBinding
+import com.hyunju.deliveryapp.screen.base.BaseActivity
+import com.hyunju.deliveryapp.screen.order.OrderMenuListViewModel
 import com.hyunju.deliveryapp.screen.review.gallery.GalleryActivity
 import com.hyunju.deliveryapp.screen.review.photo.CameraActivity
 import com.hyunju.deliveryapp.screen.review.photo.preview.ImagePreviewListActivity.Companion.URI_LIST_KEY
@@ -24,10 +26,13 @@ import com.hyunju.deliveryapp.widget.adapter.PhotoListAdapter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddRestaurantReviewActivity : AppCompatActivity() {
+class AddRestaurantReviewActivity :
+    BaseActivity<AddRestaurantReviewViewModel, ActivityAddRestaurantReviewBinding>() {
 
     private var imageUriList: ArrayList<Uri> = arrayListOf()
+
     private val auth by inject<FirebaseAuth>()
     private val storage by inject<FirebaseStorage>()
     private val firestore by inject<FirebaseFirestore>()
@@ -39,34 +44,27 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
 
     companion object {
 
-        fun newIntent(
-            context: Context,
-            orderId: String,
-            restaurantTitle: String
-        ) = Intent(context, AddRestaurantReviewActivity::class.java).apply {
-            putExtra(ORDER_ID_KEY, orderId)
-            putExtra(RESTAURANT_TITLE_KEY, restaurantTitle)
-        }
-
         const val PERMISSION_REQUEST_CODE = 1000
         const val GALLERY_REQUEST_CODE = 1001
         const val CAMERA_REQUEST_CODE = 1002
 
         const val RESTAURANT_TITLE_KEY = "restaurantTitle"
         const val ORDER_ID_KEY = "orderId"
+
+        fun newIntent(context: Context, orderId: String, restaurantTitle: String) =
+            Intent(context, AddRestaurantReviewActivity::class.java).apply {
+                putExtra(ORDER_ID_KEY, orderId)
+                putExtra(RESTAURANT_TITLE_KEY, restaurantTitle)
+            }
     }
 
-    private lateinit var binding: ActivityAddRestaurantReviewBinding
+    override val viewModel by viewModel<AddRestaurantReviewViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAddRestaurantReviewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun getViewBinding(): ActivityAddRestaurantReviewBinding =
+        ActivityAddRestaurantReviewBinding.inflate(layoutInflater)
 
-        initViews()
-    }
 
-    private fun initViews() = with(binding) {
+    override fun initViews() = with(binding) {
         toolbar.setNavigationOnClickListener { finish() }
 
         photoRecyclerView.adapter = photoListAdapter
@@ -95,6 +93,10 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
                 uploadArticle(userId, title, content, rating, listOf())
             }
         }
+    }
+
+    override fun observeData() {
+        TODO("Not yet implemented")
     }
 
     private suspend fun uploadPhoto(uriList: List<Uri>) = withContext(Dispatchers.IO) {
