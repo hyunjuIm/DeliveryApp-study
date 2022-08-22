@@ -8,7 +8,7 @@ import com.hyunju.deliveryapp.extensions.clear
 import com.hyunju.deliveryapp.extensions.load
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import com.hyunju.deliveryapp.screen.main.like.RestaurantLikeListFragment.Companion.TAG
-import com.hyunju.deliveryapp.model.restaurant.review.gallery.GalleryPhotoModel
+import com.hyunju.deliveryapp.model.restaurant.review.GalleryPhotoModel
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.listener.AdapterListener
 import com.hyunju.deliveryapp.widget.adapter.listener.review.gallery.GalleryListener

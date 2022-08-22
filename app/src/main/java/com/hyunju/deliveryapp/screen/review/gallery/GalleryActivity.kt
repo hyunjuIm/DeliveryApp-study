@@ -8,7 +8,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.databinding.ActivityGalleryBinding
-import com.hyunju.deliveryapp.model.restaurant.review.gallery.GalleryPhotoModel
+import com.hyunju.deliveryapp.model.restaurant.review.GalleryPhotoModel
 import com.hyunju.deliveryapp.screen.base.BaseActivity
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.ModelRecyclerAdapter

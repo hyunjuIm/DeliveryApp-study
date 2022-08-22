@@ -19,7 +19,7 @@ import com.hyunju.deliveryapp.data.entity.ReviewEntity
 import com.hyunju.deliveryapp.databinding.ActivityAddRestaurantReviewBinding
 import com.hyunju.deliveryapp.screen.review.gallery.GalleryActivity
 import com.hyunju.deliveryapp.screen.review.photo.CameraActivity
-import com.hyunju.deliveryapp.screen.review.photo.ImagePreviewListActivity.Companion.URI_LIST_KEY
+import com.hyunju.deliveryapp.screen.review.photo.preview.ImagePreviewListActivity.Companion.URI_LIST_KEY
 import com.hyunju.deliveryapp.widget.adapter.PhotoListAdapter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await

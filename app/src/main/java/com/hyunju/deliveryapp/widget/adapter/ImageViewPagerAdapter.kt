@@ -1,4 +1,4 @@
-package com.hyunju.deliveryapp.screen.review.photo
+package com.hyunju.deliveryapp.widget.adapter
 
 import android.net.Uri
 import android.view.LayoutInflater

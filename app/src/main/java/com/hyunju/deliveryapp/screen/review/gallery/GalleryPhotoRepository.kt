@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import com.hyunju.deliveryapp.model.restaurant.review.gallery.GalleryPhotoModel
+import com.hyunju.deliveryapp.model.restaurant.review.GalleryPhotoModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

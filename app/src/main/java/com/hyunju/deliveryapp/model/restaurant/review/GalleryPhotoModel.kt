@@ -1,4 +1,4 @@
-package com.hyunju.deliveryapp.model.restaurant.review.gallery
+package com.hyunju.deliveryapp.model.restaurant.review
 
 import android.net.Uri
 import com.hyunju.deliveryapp.model.CellType

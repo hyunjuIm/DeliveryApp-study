@@ -1,6 +1,6 @@
 package com.hyunju.deliveryapp.screen.review.gallery
 
-import com.hyunju.deliveryapp.model.restaurant.review.gallery.GalleryPhotoModel
+import com.hyunju.deliveryapp.model.restaurant.review.GalleryPhotoModel
 
 sealed class GalleryState {
 

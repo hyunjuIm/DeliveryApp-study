@@ -3,7 +3,7 @@ package com.hyunju.deliveryapp.screen.review.gallery
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hyunju.deliveryapp.DeliveryApplication.Companion.appContext
-import com.hyunju.deliveryapp.model.restaurant.review.gallery.GalleryPhotoModel
+import com.hyunju.deliveryapp.model.restaurant.review.GalleryPhotoModel
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

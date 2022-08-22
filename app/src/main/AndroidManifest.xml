@@ -53,7 +53,7 @@
             android:name=".screen.review.gallery.GalleryActivity"
             android:exported="false" />
         <activity
-            android:name=".screen.review.photo.ImagePreviewListActivity"
+            android:name=".screen.review.photo.preview.ImagePreviewListActivity"
             android:exported="false" />
 
         <meta-data

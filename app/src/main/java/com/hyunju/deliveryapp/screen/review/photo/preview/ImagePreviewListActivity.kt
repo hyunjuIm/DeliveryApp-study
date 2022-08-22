@@ -1,4 +1,4 @@
-package com.hyunju.deliveryapp.screen.review.photo
+package com.hyunju.deliveryapp.screen.review.photo.preview
 
 import android.app.Activity
 import android.content.Intent
@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.databinding.ActivityImagePreviewListBinding
-import com.hyunju.deliveryapp.screen.review.photo.ImageViewPagerAdapter
+import com.hyunju.deliveryapp.widget.adapter.ImageViewPagerAdapter
 import com.hyunju.deliveryapp.util.path.PathUtil
 import java.io.File
 import java.io.FileNotFoundException
