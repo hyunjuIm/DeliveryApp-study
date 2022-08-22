@@ -15,9 +15,10 @@ import kotlinx.coroutines.launch
 
 class OrderMenuListViewModel(
     private val restaurantFoodRepository: RestaurantFoodRepository,
-    private val orderRepository: OrderRepository,
-    private val firebaseAuth: FirebaseAuth
+    private val orderRepository: OrderRepository
 ) : BaseViewModel() {
+
+    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     val orderMenuStateLiveData = MutableLiveData<OrderMenuState>(OrderMenuState.Uninitialized)
 
