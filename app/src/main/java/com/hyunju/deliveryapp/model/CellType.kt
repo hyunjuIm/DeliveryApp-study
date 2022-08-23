@@ -8,6 +8,7 @@ enum class CellType {
     REVIEW_CELL,
     GALLERY_PHOTO_CELL,
     PHOTO_URI_CELL,
+    PREVIEW_IMAGE_CELL,
     ORDER_FOOD_CELL,
     ORDER_CELL
 }
