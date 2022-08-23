@@ -6,38 +6,32 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Bundle
+import android.util.Log
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.hyunju.deliveryapp.data.entity.ReviewEntity
+import com.hyunju.deliveryapp.data.entity.UploadPhotoEntity
 import com.hyunju.deliveryapp.databinding.ActivityAddRestaurantReviewBinding
+import com.hyunju.deliveryapp.model.restaurant.review.UriModel
 import com.hyunju.deliveryapp.screen.base.BaseActivity
-import com.hyunju.deliveryapp.screen.order.OrderMenuListViewModel
 import com.hyunju.deliveryapp.screen.review.gallery.GalleryActivity
 import com.hyunju.deliveryapp.screen.review.photo.CameraActivity
 import com.hyunju.deliveryapp.screen.review.photo.preview.ImagePreviewListActivity.Companion.URI_LIST_KEY
-import com.hyunju.deliveryapp.widget.adapter.PhotoListAdapter
-import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
+import com.hyunju.deliveryapp.util.provider.ResourcesProvider
+import com.hyunju.deliveryapp.widget.adapter.ModelRecyclerAdapter
+import com.hyunju.deliveryapp.widget.adapter.listener.review.PhotoListListener
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class AddRestaurantReviewActivity :
     BaseActivity<AddRestaurantReviewViewModel, ActivityAddRestaurantReviewBinding>() {
 
-    private var imageUriList: ArrayList<Uri> = arrayListOf()
-
     private val auth by inject<FirebaseAuth>()
-    private val storage by inject<FirebaseStorage>()
-    private val firestore by inject<FirebaseFirestore>()
 
-    private val photoListAdapter = PhotoListAdapter { uri -> removePhoto(uri) }
+    private val resourcesProvider by inject<ResourcesProvider>()
 
     private val restaurantTitle by lazy { intent.getStringExtra(RESTAURANT_TITLE_KEY)!! }
     private val orderId by lazy { intent.getStringExtra(ORDER_ID_KEY)!! }
@@ -58,124 +52,110 @@ class AddRestaurantReviewActivity :
             }
     }
 
-    override val viewModel by viewModel<AddRestaurantReviewViewModel>()
+    override val viewModel by viewModel<AddRestaurantReviewViewModel> {
+        parametersOf(
+            restaurantTitle,
+            orderId
+        )
+    }
+
+    private val adapter by lazy {
+        ModelRecyclerAdapter<UriModel, AddRestaurantReviewViewModel>(
+            listOf(),
+            viewModel,
+            resourcesProvider,
+            adapterListener = object : PhotoListListener {
+                override fun removePhoto(uri: UriModel) {
+                    viewModel.removePhotoItem(uri)
+                }
+            }
+        )
+    }
 
     override fun getViewBinding(): ActivityAddRestaurantReviewBinding =
         ActivityAddRestaurantReviewBinding.inflate(layoutInflater)
 
-
     override fun initViews() = with(binding) {
         toolbar.setNavigationOnClickListener { finish() }
 
-        photoRecyclerView.adapter = photoListAdapter
-
         titleTextView.text = restaurantTitle
+
+        photoRecyclerView.adapter = adapter
 
         imageAddButton.setOnClickListener {
             showPictureUploadDialog()
         }
 
         submitButton.setOnClickListener {
-            val title = binding.titleEditText.text.toString()
-            val content = binding.contentEditText.text.toString()
-            val userId = auth.currentUser?.uid.orEmpty()
-            val rating = binding.ratingBar.rating
-
-            showProgress()
-
-            // 중간에 이미지가 있으면 업로드 과정을 추가
-            if (imageUriList.isNotEmpty()) {
-                lifecycleScope.launch {
-                    val results = uploadPhoto(imageUriList)
-                    afterUploadPhoto(results, title, content, rating, userId)
-                }
-            } else {
-                uploadArticle(userId, title, content, rating, listOf())
-            }
-        }
-    }
-
-    override fun observeData() {
-        TODO("Not yet implemented")
-    }
-
-    private suspend fun uploadPhoto(uriList: List<Uri>) = withContext(Dispatchers.IO) {
-        val uploadDeferred: List<Deferred<Any>> = uriList.mapIndexed { index, uri ->
-            lifecycleScope.async {
-                try {
-                    val fileName = "image_${index}.png"
-                    return@async storage
-                        .reference
-                        .child("article/photo")
-                        .child(fileName)
-                        .putFile(uri)
-                        .await()
-                        .storage
-                        .downloadUrl
-                        .await()
-                        .toString()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    return@async Pair(uri, e)
-                }
-            }
-        }
-        return@withContext uploadDeferred.awaitAll()
-    }
-
-    private fun afterUploadPhoto(
-        results: List<Any>,
-        title: String,
-        content: String,
-        rating: Float,
-        userId: String
-    ) {
-        val errorResults = results.filterIsInstance<Pair<Uri, Exception>>()
-        val successResults = results.filterIsInstance<String>()
-
-        when {
-            // 에러는 발생했지만 업로드는 성공적
-            errorResults.isNotEmpty() && successResults.isNotEmpty() -> {
-                photoUploadErrorButContinueDialog(
-                    errorResults, successResults, title, content, rating, userId
+            viewModel.submit(
+                UploadPhotoEntity(
+                    title = binding.titleEditText.text.toString(),
+                    content = binding.contentEditText.text.toString(),
+                    rating = binding.ratingBar.rating,
+                    userId = auth.currentUser?.uid.orEmpty()
                 )
+            )
+        }
+    }
+
+    override fun observeData() = viewModel.addRestaurantReviewStateLiveData.observe(this) {
+        when (it) {
+            is AddRestaurantReviewState.Loading -> handleLoading()
+            is AddRestaurantReviewState.Success -> handleSuccess(it)
+            is AddRestaurantReviewState.Register -> handleRegister(it)
+            is AddRestaurantReviewState.Error -> handleError(it)
+            else -> Unit
+        }
+    }
+
+    private fun handleLoading() = with(binding) {
+        progressBar.isVisible = true
+    }
+
+    private fun handleSuccess(state: AddRestaurantReviewState.Success) = with(binding) {
+        progressBar.isGone = true
+        adapter.submitList(state.uriList)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun handleRegister(state: AddRestaurantReviewState.Register) {
+        when (state) {
+            is AddRestaurantReviewState.Register.Photo -> {
+                // 사진 업로드 성공
+                if (state.isUploaded) {
+                    viewModel.uploadArticle(state.uploadPhotoEntity)
+                } else { // 사진 업로드 실패
+                    photoUploadErrorButContinueDialog(state.uploadPhotoEntity)
+                }
             }
-            // 에러 발생은 안했지만 업로드 실패
-            errorResults.isNotEmpty() && successResults.isEmpty() -> {
-                uploadError()
-            }
-            // 업로드 성공
-            else -> {
-                uploadArticle(userId, title, content, rating, successResults)
+
+            is AddRestaurantReviewState.Register.Article -> {
+                Toast.makeText(this, "리뷰가 성공적으로 업로드 되었습니다.", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
     }
 
-    private fun uploadArticle(
-        userId: String,
-        title: String,
-        content: String,
-        rating: Float,
-        imageUrlList: List<String>
-    ) {
-        val review = ReviewEntity(
-            userId = userId,
-            title = title,
-            createdAt = System.currentTimeMillis(),
-            content = content,
-            rating = rating,
-            imageUrlList = imageUrlList,
-            orderId = orderId,
-            restaurantTitle = restaurantTitle
-        )
+    private fun handleError(state: AddRestaurantReviewState.Error) {
+        Toast.makeText(this, getString(state.messageId), Toast.LENGTH_SHORT).show()
+    }
 
-        firestore
-            .collection("review")
-            .add(review)
+    private fun photoUploadErrorButContinueDialog(uploadPhotoEntity: UploadPhotoEntity) {
+        uploadPhotoEntity.results?.let {
+            val errorResults = uploadPhotoEntity.results.filterIsInstance<Pair<Uri, Exception>>()
+            val successResults = uploadPhotoEntity.results.filterIsInstance<String>()
 
-        hideProgress()
-        Toast.makeText(this, "리뷰가 성공적으로 업로드 되었습니다.", Toast.LENGTH_SHORT).show()
-        finish()
+            AlertDialog.Builder(this)
+                .setTitle("특정 이미지 업로드 실패")
+                .setMessage("업로드에 실패한 이미지가 있습니다." + errorResults.map { (uri, _) ->
+                    "$uri\n"
+                } + "그럼에도 불구하고 업로드 하시겠습니까?")
+                .setPositiveButton("업로드") { _, _ ->
+                    viewModel.uploadArticle(uploadPhotoEntity.copy(results = successResults))
+                }
+                .create()
+                .show()
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -209,14 +189,6 @@ class AddRestaurantReviewActivity :
         )
     }
 
-    private fun showProgress() {
-        binding.progressBar.isVisible = true
-    }
-
-    private fun hideProgress() {
-        binding.progressBar.isVisible = false
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -228,10 +200,7 @@ class AddRestaurantReviewActivity :
             GALLERY_REQUEST_CODE -> {
                 data?.let { intent ->
                     val uriList = intent.getParcelableArrayListExtra<Uri>(URI_LIST_KEY)
-                    uriList?.let { list ->
-                        imageUriList.addAll(list)
-                        photoListAdapter.setPhotoList(imageUriList)
-                    }
+                    viewModel.addPhotoItemList(uriList)
                 } ?: kotlin.run {
                     Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -239,10 +208,7 @@ class AddRestaurantReviewActivity :
             CAMERA_REQUEST_CODE -> {
                 data?.let { intent ->
                     val uriList = intent.getParcelableArrayListExtra<Uri>(URI_LIST_KEY)
-                    uriList?.let { list ->
-                        imageUriList.addAll(list)
-                        photoListAdapter.setPhotoList(imageUriList)
-                    }
+                    viewModel.addPhotoItemList(uriList)
                 } ?: kotlin.run {
                     Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -302,36 +268,6 @@ class AddRestaurantReviewActivity :
             }
             .create()
             .show()
-    }
-
-    private fun photoUploadErrorButContinueDialog(
-        errorResult: List<Pair<Uri, Exception>>,
-        successResults: List<String>,
-        title: String,
-        content: String,
-        rating: Float,
-        userId: String
-    ) {
-        AlertDialog.Builder(this)
-            .setTitle("특정 이미지 업로드 실패")
-            .setMessage("업로드에 실패한 이미지가 있습니다." + errorResult.map { (uri, _) ->
-                "$uri\n"
-            } + "그럼에도 불구하고 업로드 하시겠습니까?")
-            .setPositiveButton("업로드") { _, _ ->
-                uploadArticle(userId, title, content, rating, successResults)
-            }
-            .create()
-            .show()
-    }
-
-    private fun uploadError() {
-        Toast.makeText(this, "사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
-        hideProgress()
-    }
-
-    private fun removePhoto(uri: Uri) {
-        imageUriList.remove(uri)
-        photoListAdapter.setPhotoList(imageUriList)
     }
 
 }
