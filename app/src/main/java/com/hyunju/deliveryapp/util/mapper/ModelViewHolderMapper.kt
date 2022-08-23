@@ -15,7 +15,8 @@ import com.hyunju.deliveryapp.widget.adapter.viewholder.order.OrderViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.restaurant.LikeRestaurantViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.restaurant.RestaurantViewHolder
 import com.hyunju.deliveryapp.widget.adapter.viewholder.review.RestaurantReviewViewHolder
-import com.hyunju.deliveryapp.widget.adapter.viewholder.review.gallery.PhotoItemViewHolder
+import com.hyunju.deliveryapp.widget.adapter.viewholder.review.gallery.GalleryPhotoItemViewHolder
+import com.hyunju.deliveryapp.widget.adapter.viewholder.review.photo.UploadPhotoItemViewHolder
 
 object ModelViewHolderMapper {
 
@@ -53,8 +54,13 @@ object ModelViewHolderMapper {
                 viewModel,
                 resourcesProvider
             )
-            CellType.GALLERY_PHOTO_CELL -> PhotoItemViewHolder(
+            CellType.GALLERY_PHOTO_CELL -> GalleryPhotoItemViewHolder(
                 ViewholderGalleryPhotoItemBinding.inflate(inflater, parent, false),
+                viewModel,
+                resourcesProvider
+            )
+            CellType.PHOTO_URI_CELL -> UploadPhotoItemViewHolder(
+                ViewholderPhotoItemBinding.inflate(inflater, parent, false),
                 viewModel,
                 resourcesProvider
             )
