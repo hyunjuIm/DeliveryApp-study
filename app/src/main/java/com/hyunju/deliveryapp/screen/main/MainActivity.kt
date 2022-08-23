@@ -13,7 +13,6 @@ import com.hyunju.deliveryapp.screen.main.home.HomeFragment
 import com.hyunju.deliveryapp.screen.main.like.RestaurantLikeListFragment
 import com.hyunju.deliveryapp.screen.main.my.MyFragment
 import com.hyunju.deliveryapp.util.event.MenuChangeEventBus
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 

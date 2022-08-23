@@ -4,16 +4,12 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.hyunju.deliveryapp.data.entity.RestaurantFoodEntity
 import com.hyunju.deliveryapp.databinding.FragmentListBinding
-import com.hyunju.deliveryapp.model.restaurant.RestaurantModel
 import com.hyunju.deliveryapp.model.restaurant.food.FoodModel
 import com.hyunju.deliveryapp.screen.base.BaseFragment
-import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.RestaurantDetailActivity
 import com.hyunju.deliveryapp.screen.main.home.restaurant.detail.RestaurantDetailViewModel
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.ModelRecyclerAdapter
-import com.hyunju.deliveryapp.widget.adapter.listener.AdapterListener
 import com.hyunju.deliveryapp.widget.adapter.listener.restaurant.FoodMenuListListener
-import com.hyunju.deliveryapp.widget.adapter.listener.restaurant.RestaurantListListener
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

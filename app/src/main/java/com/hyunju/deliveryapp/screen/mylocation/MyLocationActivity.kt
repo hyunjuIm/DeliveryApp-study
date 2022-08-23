@@ -3,7 +3,6 @@ package com.hyunju.deliveryapp.screen.mylocation
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -47,7 +46,7 @@ class MyLocationActivity :
     private var isChangeLocation: Boolean = false
 
     override fun onMapReady(map: GoogleMap) {
-        this.map = map ?: return
+        this.map = map
         viewModel.fetchData()
     }
 
