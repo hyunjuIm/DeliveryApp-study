@@ -7,10 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.display.DisplayManager
-import android.media.MediaScannerConnection
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.ScaleGestureDetector
@@ -27,8 +24,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import com.hyunju.deliveryapp.databinding.ActivityCameraBinding
 import com.hyunju.deliveryapp.extensions.load
+import com.hyunju.deliveryapp.screen.base.BaseActivity
 import com.hyunju.deliveryapp.screen.review.photo.preview.ImagePreviewListActivity
 import com.hyunju.deliveryapp.util.path.PathUtil
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileNotFoundException
 import java.lang.Exception
@@ -37,8 +36,19 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class CameraActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCameraBinding
+class CameraActivity : BaseActivity<CameraViewModel, ActivityCameraBinding>() {
+
+    companion object {
+        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+
+        private const val LENS_FACING: Int = CameraSelector.LENS_FACING_BACK
+
+        private const val CONFIRM_IMAGE_REQUEST_CODE = 3000
+
+        fun newIntent(activity: Activity) = Intent(activity, CameraActivity::class.java)
+    }
 
     private lateinit var cameraExecutor: ExecutorService
     private val cameraMainExecutor by lazy { ContextCompat.getMainExecutor(this) }
@@ -55,10 +65,7 @@ class CameraActivity : AppCompatActivity() {
     private var camera: Camera? = null
     private var root: View? = null
     private var isCapturing: Boolean = false
-
     private var isFlashEnabled: Boolean = false
-
-    private var uriList = mutableListOf<Uri>()
 
     private val displayListener = object : DisplayManager.DisplayListener {
         override fun onDisplayAdded(displayId: Int) = Unit
@@ -75,24 +82,27 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCameraBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        root = binding.root
+    override val viewModel by viewModel<CameraViewModel>()
+
+    override fun getViewBinding(): ActivityCameraBinding =
+        ActivityCameraBinding.inflate(layoutInflater)
+
+    override fun initViews() = with(binding) {
         if (allPermissionsGranted()) {
-            startCamera(binding.viewFinder)
+            startCamera(viewFinder)
         } else {
             ActivityCompat.requestPermissions(
-                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+                this@CameraActivity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
     }
 
+    override fun observeData() = viewModel.cameraLiveData.observe(this) {
+        bindPreviewImageViewClickListener(it)
+    }
+
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            baseContext, it
-        ) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun startCamera(viewFinder: PreviewView) {
@@ -136,7 +146,6 @@ class CameraActivity : AppCompatActivity() {
                 bindCaptureListener()
                 bindZoomListener()
                 bindLightSwitchListener()
-                bindPreviewImageViewClickListener()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -186,7 +195,7 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    private fun bindPreviewImageViewClickListener() = with(binding) {
+    private fun bindPreviewImageViewClickListener(uriList: List<Uri>) = with(binding) {
         previewImageVIew.setOnClickListener {
             startActivityForResult(
                 ImagePreviewListActivity.newIntent(this@CameraActivity, uriList),
@@ -214,7 +223,6 @@ class CameraActivity : AppCompatActivity() {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = outputFileResults.savedUri ?: Uri.fromFile(photoFile)
-                    val rotation = binding.viewFinder.display.rotation // 회전 값 설정
                     contentUri = savedUri
                     updateSavedImageContent()
                 }
@@ -236,18 +244,13 @@ class CameraActivity : AppCompatActivity() {
     private fun updateSavedImageContent() {
         contentUri?.let {
             isCapturing = try {
-                val file = File(PathUtil.getPath(this, it) ?: throw FileNotFoundException())
-                MediaScannerConnection.scanFile(
-                    this,
-                    arrayOf(file.path),
-                    arrayOf("image/jpeg"),
-                    null
-                )
                 Handler(Looper.getMainLooper()).post {
                     binding.previewImageVIew.load(url = it.toString(), corner = 4f)
                 }
-                if (isFlashEnabled) flashLight(false)
-                uriList.add(it)
+                if (isFlashEnabled) {
+                    flashLight(false)
+                }
+                viewModel.addUriItem(this, it)
                 false
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
@@ -279,18 +282,6 @@ class CameraActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK, data)
             finish()
         }
-    }
-
-    companion object {
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-
-        private val LENS_FACING: Int = CameraSelector.LENS_FACING_BACK
-
-        const val CONFIRM_IMAGE_REQUEST_CODE = 3000
-
-        fun newIntent(activity: Activity) = Intent(activity, CameraActivity::class.java)
     }
 
 }
