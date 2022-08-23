@@ -32,6 +32,7 @@ import com.hyunju.deliveryapp.screen.main.my.MyViewModel
 import com.hyunju.deliveryapp.screen.mylocation.MyLocationViewModel
 import com.hyunju.deliveryapp.screen.order.OrderMenuListViewModel
 import com.hyunju.deliveryapp.screen.review.AddRestaurantReviewViewModel
+import com.hyunju.deliveryapp.screen.review.photo.CameraViewModel
 import com.hyunju.deliveryapp.util.event.MenuChangeEventBus
 import com.hyunju.deliveryapp.util.provider.DefaultResourcesProvider
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
@@ -61,6 +62,7 @@ val appModule = module {
     }
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
     viewModel { (restaurantTitle: String, orderId:String) -> AddRestaurantReviewViewModel(restaurantTitle, orderId) }
+    viewModel { CameraViewModel() }
 
     viewModel { OrderMenuListViewModel(get(), get()) }
 
