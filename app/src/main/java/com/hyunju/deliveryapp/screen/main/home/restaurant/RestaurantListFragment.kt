@@ -1,7 +1,6 @@
 package com.hyunju.deliveryapp.screen.main.home.restaurant
 
 import android.util.Log
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.hyunju.deliveryapp.DeliveryApplication.Companion.APP_TAG
 import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
@@ -56,7 +55,6 @@ class RestaurantListFragment :
     }
 
     override fun observeData() = viewModel.restaurantListLiveData.observe(viewLifecycleOwner) {
-        Log.d(APP_TAG, "restaurantList : $it")
         adapter.submitList(it)
     }
 

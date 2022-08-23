@@ -42,16 +42,6 @@ class GalleryActivity : BaseActivity<GalleryViewModel, ActivityGalleryBinding>()
             })
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityGalleryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        viewModel.fetchData()
-        initViews()
-        observeData()
-    }
-
     override fun initViews() = with(binding) {
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(

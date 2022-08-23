@@ -1,6 +1,5 @@
 package com.hyunju.deliveryapp.data.repository.map
 
-import android.util.Log
 import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
 import com.hyunju.deliveryapp.data.network.MapApiService
 import com.hyunju.deliveryapp.data.reponse.address.AddressInfo

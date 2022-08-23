@@ -56,8 +56,6 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     private val changeLocationLauncher =
-    // registerForActivityResult() 를 사용해 Callback 등록
-        // result 를 받기 위해 activity 를 실행하는 StartActivityForResult()를 넣어준다.
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.getParcelableExtra<MapSearchInfoEntity>(HomeViewModel.MY_LOCATION_KEY)
