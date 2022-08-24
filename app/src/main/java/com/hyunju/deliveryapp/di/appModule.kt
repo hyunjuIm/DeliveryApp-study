@@ -1,5 +1,6 @@
 package com.hyunju.deliveryapp.di
 
+import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -33,6 +34,7 @@ import com.hyunju.deliveryapp.screen.mylocation.MyLocationViewModel
 import com.hyunju.deliveryapp.screen.order.OrderMenuListViewModel
 import com.hyunju.deliveryapp.screen.review.AddRestaurantReviewViewModel
 import com.hyunju.deliveryapp.screen.review.photo.CameraViewModel
+import com.hyunju.deliveryapp.screen.review.photo.preview.ImagePreviewListViewModel
 import com.hyunju.deliveryapp.util.event.MenuChangeEventBus
 import com.hyunju.deliveryapp.util.provider.DefaultResourcesProvider
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
@@ -61,8 +63,11 @@ val appModule = module {
         RestaurantMenuListViewModel(restaurantId, restaurantFoodList, get())
     }
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
-    viewModel { (restaurantTitle: String, orderId:String) -> AddRestaurantReviewViewModel(restaurantTitle, orderId) }
+    viewModel { (restaurantTitle: String, orderId: String) ->
+        AddRestaurantReviewViewModel(restaurantTitle, orderId)
+    }
     viewModel { CameraViewModel() }
+    viewModel { (uriList: List<Uri>) -> ImagePreviewListViewModel(uriList) }
 
     viewModel { OrderMenuListViewModel(get(), get()) }
 
