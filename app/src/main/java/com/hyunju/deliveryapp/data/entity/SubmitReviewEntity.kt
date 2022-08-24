@@ -1,6 +1,6 @@
 package com.hyunju.deliveryapp.data.entity
 
-data class UploadPhotoEntity(
+data class SubmitReviewEntity(
     val results: List<Any>? = null,
     val title: String,
     val content: String,

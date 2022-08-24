@@ -20,7 +20,7 @@ class GalleryActivity : BaseActivity<GalleryViewModel, ActivityGalleryBinding>()
     companion object {
         fun newIntent(activity: Activity) = Intent(activity, GalleryActivity::class.java)
 
-        private const val URI_LIST_KEY = "uriList"
+        const val URI_LIST_KEY = "uriList"
     }
 
     override val viewModel by viewModels<GalleryViewModel>()
