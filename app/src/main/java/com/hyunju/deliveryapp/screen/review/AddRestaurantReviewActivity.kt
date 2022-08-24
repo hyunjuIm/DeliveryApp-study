@@ -1,24 +1,26 @@
 package com.hyunju.deliveryapp.screen.review
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.util.Log
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
-import com.hyunju.deliveryapp.data.entity.UploadPhotoEntity
+import com.hyunju.deliveryapp.R
+import com.hyunju.deliveryapp.data.entity.SubmitReviewEntity
 import com.hyunju.deliveryapp.databinding.ActivityAddRestaurantReviewBinding
 import com.hyunju.deliveryapp.model.restaurant.review.UriModel
 import com.hyunju.deliveryapp.screen.base.BaseActivity
 import com.hyunju.deliveryapp.screen.review.gallery.GalleryActivity
 import com.hyunju.deliveryapp.screen.review.photo.CameraActivity
-import com.hyunju.deliveryapp.screen.review.photo.preview.ImagePreviewListActivity.Companion.URI_LIST_KEY
+import com.hyunju.deliveryapp.screen.review.photo.preview.ImagePreviewListActivity
 import com.hyunju.deliveryapp.util.provider.ResourcesProvider
 import com.hyunju.deliveryapp.widget.adapter.ModelRecyclerAdapter
 import com.hyunju.deliveryapp.widget.adapter.listener.review.PhotoListListener
@@ -29,19 +31,7 @@ import org.koin.core.parameter.parametersOf
 class AddRestaurantReviewActivity :
     BaseActivity<AddRestaurantReviewViewModel, ActivityAddRestaurantReviewBinding>() {
 
-    private val auth by inject<FirebaseAuth>()
-
-    private val resourcesProvider by inject<ResourcesProvider>()
-
-    private val restaurantTitle by lazy { intent.getStringExtra(RESTAURANT_TITLE_KEY)!! }
-    private val orderId by lazy { intent.getStringExtra(ORDER_ID_KEY)!! }
-
     companion object {
-
-        const val PERMISSION_REQUEST_CODE = 1000
-        const val GALLERY_REQUEST_CODE = 1001
-        const val CAMERA_REQUEST_CODE = 1002
-
         const val RESTAURANT_TITLE_KEY = "restaurantTitle"
         const val ORDER_ID_KEY = "orderId"
 
@@ -51,6 +41,47 @@ class AddRestaurantReviewActivity :
                 putExtra(RESTAURANT_TITLE_KEY, restaurantTitle)
             }
     }
+
+    private val galleryLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.getParcelableArrayListExtra<Uri>(GalleryActivity.URI_LIST_KEY)
+                    ?.let { uriList ->
+                        viewModel.addPhotoItemList(uriList)
+                    } ?: kotlin.run {
+                    Toast.makeText(this, R.string.fail_photo_to_get, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+    private val galleryPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                startGalleryScreen()
+            } else {
+                Toast.makeText(this, R.string.can_not_assigned_permission, Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+    private val cameraLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.getParcelableArrayListExtra<Uri>(ImagePreviewListActivity.URI_LIST_KEY)
+                    ?.let { uriList ->
+                        viewModel.addPhotoItemList(uriList)
+                    } ?: kotlin.run {
+                    Toast.makeText(this, R.string.fail_photo_to_get, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+    private val auth by inject<FirebaseAuth>()
+
+    private val resourcesProvider by inject<ResourcesProvider>()
+
+    private val restaurantTitle by lazy { intent.getStringExtra(RESTAURANT_TITLE_KEY)!! }
+    private val orderId by lazy { intent.getStringExtra(ORDER_ID_KEY)!! }
 
     override val viewModel by viewModel<AddRestaurantReviewViewModel> {
         parametersOf(
@@ -87,14 +118,7 @@ class AddRestaurantReviewActivity :
         }
 
         submitButton.setOnClickListener {
-            viewModel.submit(
-                UploadPhotoEntity(
-                    title = binding.titleEditText.text.toString(),
-                    content = binding.contentEditText.text.toString(),
-                    rating = binding.ratingBar.rating,
-                    userId = auth.currentUser?.uid.orEmpty()
-                )
-            )
+            submit()
         }
     }
 
@@ -123,14 +147,14 @@ class AddRestaurantReviewActivity :
             is AddRestaurantReviewState.Register.Photo -> {
                 // 사진 업로드 성공
                 if (state.isUploaded) {
-                    viewModel.uploadArticle(state.uploadPhotoEntity)
+                    viewModel.uploadArticle(state.submitReviewEntity)
                 } else { // 사진 업로드 실패
-                    photoUploadErrorButContinueDialog(state.uploadPhotoEntity)
+                    photoUploadErrorButContinueDialog(state.submitReviewEntity)
                 }
             }
 
             is AddRestaurantReviewState.Register.Article -> {
-                Toast.makeText(this, "리뷰가 성공적으로 업로드 되었습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.success_upload_review, Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
@@ -140,10 +164,21 @@ class AddRestaurantReviewActivity :
         Toast.makeText(this, getString(state.messageId), Toast.LENGTH_SHORT).show()
     }
 
-    private fun photoUploadErrorButContinueDialog(uploadPhotoEntity: UploadPhotoEntity) {
-        uploadPhotoEntity.results?.let {
-            val errorResults = uploadPhotoEntity.results.filterIsInstance<Pair<Uri, Exception>>()
-            val successResults = uploadPhotoEntity.results.filterIsInstance<String>()
+    private fun submit() {
+        val reviewData = SubmitReviewEntity(
+            title = binding.titleEditText.text.toString(),
+            content = binding.contentEditText.text.toString(),
+            rating = binding.ratingBar.rating,
+            userId = auth.currentUser?.uid.orEmpty()
+        )
+
+        viewModel.submit(reviewData)
+    }
+
+    private fun photoUploadErrorButContinueDialog(submitReviewEntity: SubmitReviewEntity) {
+        submitReviewEntity.results?.let {
+            val errorResults = submitReviewEntity.results.filterIsInstance<Pair<Uri, Exception>>()
+            val successResults = submitReviewEntity.results.filterIsInstance<String>()
 
             AlertDialog.Builder(this)
                 .setTitle("특정 이미지 업로드 실패")
@@ -151,72 +186,23 @@ class AddRestaurantReviewActivity :
                     "$uri\n"
                 } + "그럼에도 불구하고 업로드 하시겠습니까?")
                 .setPositiveButton("업로드") { _, _ ->
-                    viewModel.uploadArticle(uploadPhotoEntity.copy(results = successResults))
+                    viewModel.uploadArticle(submitReviewEntity.copy(results = successResults))
                 }
                 .create()
                 .show()
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when (requestCode) {
-            PERMISSION_REQUEST_CODE ->
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startGalleryScreen()
-                } else {
-                    Toast.makeText(this, "권한을 거부하셨습니다.", Toast.LENGTH_SHORT).show()
-                }
-        }
-    }
-
     private fun startGalleryScreen() {
-        startActivityForResult( //registerForActivityResult 권유
-            GalleryActivity.newIntent(this),
-            GALLERY_REQUEST_CODE
+        galleryLauncher.launch(
+            GalleryActivity.newIntent(this)
         )
     }
 
     private fun startCameraScreen() {
-        startActivityForResult(
-            CameraActivity.newIntent(this),
-            CAMERA_REQUEST_CODE
+        cameraLauncher.launch(
+            CameraActivity.newIntent(this)
         )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-
-        when (requestCode) {
-            GALLERY_REQUEST_CODE -> {
-                data?.let { intent ->
-                    val uriList = intent.getParcelableArrayListExtra<Uri>(URI_LIST_KEY)
-                    viewModel.addPhotoItemList(uriList)
-                } ?: kotlin.run {
-                    Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-            CAMERA_REQUEST_CODE -> {
-                data?.let { intent ->
-                    val uriList = intent.getParcelableArrayListExtra<Uri>(URI_LIST_KEY)
-                    viewModel.addPhotoItemList(uriList)
-                } ?: kotlin.run {
-                    Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-            else -> {
-                Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun showPermissionContextPopup() {
@@ -224,32 +210,10 @@ class AddRestaurantReviewActivity :
             .setTitle("권한이 필요합니다.")
             .setMessage("사진을 가져오기 위해 필요합니다.")
             .setPositiveButton("동의") { _, _ ->
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                    PERMISSION_REQUEST_CODE
-                )
+                galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
             .create()
             .show()
-    }
-
-    private fun checkExternalStoragePermission(uploadAction: () -> Unit) {
-        when {
-            ContextCompat.checkSelfPermission(
-                this, android.Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                uploadAction()
-            }
-            shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
-                showPermissionContextPopup()
-            }
-            else -> {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                    PERMISSION_REQUEST_CODE
-                )
-            }
-        }
     }
 
     private fun showPictureUploadDialog() {
@@ -268,6 +232,22 @@ class AddRestaurantReviewActivity :
             }
             .create()
             .show()
+    }
+
+    private fun checkExternalStoragePermission(uploadAction: () -> Unit) {
+        when {
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                uploadAction()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                showPermissionContextPopup()
+            }
+            else -> {
+                galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+        }
     }
 
 }

@@ -13,15 +13,16 @@ import android.os.Looper
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
 import androidx.camera.core.ImageCapture.FLASH_MODE_AUTO
 import androidx.camera.core.impl.ImageOutputConfig
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.databinding.ActivityCameraBinding
 import com.hyunju.deliveryapp.extensions.load
 import com.hyunju.deliveryapp.screen.base.BaseActivity
@@ -40,15 +41,37 @@ class CameraActivity : BaseActivity<CameraViewModel, ActivityCameraBinding>() {
 
     companion object {
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
         private const val LENS_FACING: Int = CameraSelector.LENS_FACING_BACK
 
-        private const val CONFIRM_IMAGE_REQUEST_CODE = 3000
-
         fun newIntent(activity: Activity) = Intent(activity, CameraActivity::class.java)
     }
+
+    private val cameraPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                startCamera(binding.viewFinder)
+            } else {
+                Toast.makeText(this, R.string.can_not_assigned_permission, Toast.LENGTH_SHORT)
+                    .show()
+                finish()
+            }
+        }
+
+    private val imagePreviewListLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.getParcelableArrayListExtra<Uri>(ImagePreviewListActivity.URI_LIST_KEY)
+                    ?.let { uriList ->
+                        setResult(Activity.RESULT_OK, Intent().apply {
+                            putExtra(ImagePreviewListActivity.URI_LIST_KEY, uriList)
+                        })
+                        finish()
+                    } ?: kotlin.run {
+                    Toast.makeText(this, R.string.fail_photo_to_get, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
     private lateinit var cameraExecutor: ExecutorService
     private val cameraMainExecutor by lazy { ContextCompat.getMainExecutor(this) }
@@ -88,21 +111,19 @@ class CameraActivity : BaseActivity<CameraViewModel, ActivityCameraBinding>() {
         ActivityCameraBinding.inflate(layoutInflater)
 
     override fun initViews() = with(binding) {
-        if (allPermissionsGranted()) {
+        if (ContextCompat.checkSelfPermission(
+                this@CameraActivity,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             startCamera(viewFinder)
         } else {
-            ActivityCompat.requestPermissions(
-                this@CameraActivity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
-            )
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
     override fun observeData() = viewModel.cameraLiveData.observe(this) {
         bindPreviewImageViewClickListener(it)
-    }
-
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun startCamera(viewFinder: PreviewView) {
@@ -197,9 +218,8 @@ class CameraActivity : BaseActivity<CameraViewModel, ActivityCameraBinding>() {
 
     private fun bindPreviewImageViewClickListener(uriList: List<Uri>) = with(binding) {
         previewImageVIew.setOnClickListener {
-            startActivityForResult(
-                ImagePreviewListActivity.newIntent(this@CameraActivity, uriList),
-                CONFIRM_IMAGE_REQUEST_CODE
+            imagePreviewListLauncher.launch(
+                ImagePreviewListActivity.newIntent(this@CameraActivity, uriList)
             )
         }
     }
@@ -256,31 +276,6 @@ class CameraActivity : BaseActivity<CameraViewModel, ActivityCameraBinding>() {
                 e.printStackTrace()
                 false
             }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                startCamera(binding.viewFinder)
-            } else {
-                Toast.makeText(this, "Permissions not granted by the user.", Toast.LENGTH_SHORT)
-                    .show()
-                finish()
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CONFIRM_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            setResult(Activity.RESULT_OK, data)
-            finish()
         }
     }
 
