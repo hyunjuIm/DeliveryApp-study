@@ -1,6 +1,6 @@
-package com.hyunju.deliveryapp.data.entity
+package com.hyunju.deliveryapp.model.restaurant.review
 
-data class SubmitReviewEntity(
+data class SubmitReviewModel(
     val results: List<Any>? = null,
     val title: String,
     val content: String,

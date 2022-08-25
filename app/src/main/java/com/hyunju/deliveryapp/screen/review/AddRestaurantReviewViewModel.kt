@@ -7,7 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.data.entity.ReviewEntity
-import com.hyunju.deliveryapp.data.entity.SubmitReviewEntity
+import com.hyunju.deliveryapp.model.restaurant.review.SubmitReviewModel
 import com.hyunju.deliveryapp.model.restaurant.review.UriModel
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
 import kotlinx.coroutines.*
@@ -52,7 +52,7 @@ class AddRestaurantReviewViewModel(
         fetchData()
     }
 
-    fun submit(submitReviewEntity: SubmitReviewEntity) = viewModelScope.launch {
+    fun submit(submitReviewModel: SubmitReviewModel) = viewModelScope.launch {
         addRestaurantReviewStateLiveData.value = AddRestaurantReviewState.Loading
 
         if (uriList?.isNotEmpty() == true) {
@@ -66,7 +66,7 @@ class AddRestaurantReviewViewModel(
                     addRestaurantReviewStateLiveData.value =
                         AddRestaurantReviewState.Register.Photo(
                             isUploaded = false,
-                            submitReviewEntity = submitReviewEntity.copy(
+                            submitReviewModel = submitReviewModel.copy(
                                 results = results
                             )
                         )
@@ -82,7 +82,7 @@ class AddRestaurantReviewViewModel(
                     addRestaurantReviewStateLiveData.value =
                         AddRestaurantReviewState.Register.Photo(
                             isUploaded = true,
-                            submitReviewEntity = submitReviewEntity.copy(
+                            submitReviewModel = submitReviewModel.copy(
                                 results = successResults
                             )
                         )
@@ -92,7 +92,7 @@ class AddRestaurantReviewViewModel(
             addRestaurantReviewStateLiveData.value =
                 AddRestaurantReviewState.Register.Photo(
                     isUploaded = true,
-                    submitReviewEntity = submitReviewEntity.copy(
+                    submitReviewModel = submitReviewModel.copy(
                         results = listOf()
                     )
                 )
@@ -125,16 +125,16 @@ class AddRestaurantReviewViewModel(
         return@withContext uploadDeferred.awaitAll()
     }
 
-    fun uploadArticle(submitReviewEntity: SubmitReviewEntity) {
+    fun uploadArticle(submitReviewModel: SubmitReviewModel) {
         addRestaurantReviewStateLiveData.value = AddRestaurantReviewState.Loading
 
         val review = ReviewEntity(
-            userId = submitReviewEntity.userId,
-            title = submitReviewEntity.title,
+            userId = submitReviewModel.userId,
+            title = submitReviewModel.title,
             createdAt = System.currentTimeMillis(),
-            content = submitReviewEntity.content,
-            rating = submitReviewEntity.rating,
-            imageUrlList = submitReviewEntity.results?.map { it.toString() },
+            content = submitReviewModel.content,
+            rating = submitReviewModel.rating,
+            imageUrlList = submitReviewModel.results?.map { it.toString() },
             orderId = orderId,
             restaurantTitle = restaurantTitle
         )

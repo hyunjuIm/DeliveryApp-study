@@ -14,7 +14,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.hyunju.deliveryapp.R
-import com.hyunju.deliveryapp.data.entity.SubmitReviewEntity
+import com.hyunju.deliveryapp.model.restaurant.review.SubmitReviewModel
 import com.hyunju.deliveryapp.databinding.ActivityAddRestaurantReviewBinding
 import com.hyunju.deliveryapp.model.restaurant.review.UriModel
 import com.hyunju.deliveryapp.screen.base.BaseActivity
@@ -147,9 +147,9 @@ class AddRestaurantReviewActivity :
             is AddRestaurantReviewState.Register.Photo -> {
                 // 사진 업로드 성공
                 if (state.isUploaded) {
-                    viewModel.uploadArticle(state.submitReviewEntity)
+                    viewModel.uploadArticle(state.submitReviewModel)
                 } else { // 사진 업로드 실패
-                    photoUploadErrorButContinueDialog(state.submitReviewEntity)
+                    photoUploadErrorButContinueDialog(state.submitReviewModel)
                 }
             }
 
@@ -165,7 +165,7 @@ class AddRestaurantReviewActivity :
     }
 
     private fun submit() {
-        val reviewData = SubmitReviewEntity(
+        val reviewData = SubmitReviewModel(
             title = binding.titleEditText.text.toString(),
             content = binding.contentEditText.text.toString(),
             rating = binding.ratingBar.rating,
@@ -175,10 +175,10 @@ class AddRestaurantReviewActivity :
         viewModel.submit(reviewData)
     }
 
-    private fun photoUploadErrorButContinueDialog(submitReviewEntity: SubmitReviewEntity) {
-        submitReviewEntity.results?.let {
-            val errorResults = submitReviewEntity.results.filterIsInstance<Pair<Uri, Exception>>()
-            val successResults = submitReviewEntity.results.filterIsInstance<String>()
+    private fun photoUploadErrorButContinueDialog(submitReviewModel: SubmitReviewModel) {
+        submitReviewModel.results?.let {
+            val errorResults = submitReviewModel.results.filterIsInstance<Pair<Uri, Exception>>()
+            val successResults = submitReviewModel.results.filterIsInstance<String>()
 
             AlertDialog.Builder(this)
                 .setTitle("특정 이미지 업로드 실패")
@@ -186,7 +186,7 @@ class AddRestaurantReviewActivity :
                     "$uri\n"
                 } + "그럼에도 불구하고 업로드 하시겠습니까?")
                 .setPositiveButton("업로드") { _, _ ->
-                    viewModel.uploadArticle(submitReviewEntity.copy(results = successResults))
+                    viewModel.uploadArticle(submitReviewModel.copy(results = successResults))
                 }
                 .create()
                 .show()
