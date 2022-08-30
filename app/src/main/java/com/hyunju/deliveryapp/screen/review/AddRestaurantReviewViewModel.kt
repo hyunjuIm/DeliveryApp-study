@@ -10,6 +10,7 @@ import com.hyunju.deliveryapp.data.entity.ReviewEntity
 import com.hyunju.deliveryapp.model.restaurant.review.SubmitReviewModel
 import com.hyunju.deliveryapp.model.restaurant.review.UriModel
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
+import com.hyunju.deliveryapp.util.file.FileUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
@@ -21,7 +22,7 @@ class AddRestaurantReviewViewModel(
     private val storage by lazy { FirebaseStorage.getInstance() }
     private val firestore by lazy { FirebaseFirestore.getInstance() }
 
-    private var uriList: ArrayList<UriModel>? = arrayListOf()
+    private var uriList: ArrayList<UriModel> = arrayListOf()
 
     val addRestaurantReviewStateLiveData =
         MutableLiveData<AddRestaurantReviewState>(AddRestaurantReviewState.Uninitialized)
@@ -35,7 +36,7 @@ class AddRestaurantReviewViewModel(
 
     fun addPhotoItemList(addList: ArrayList<Uri>?) {
         addList?.let { list ->
-            uriList?.addAll(
+            uriList.addAll(
                 list.map {
                     UriModel(
                         id = it.hashCode().toLong(),
@@ -48,14 +49,14 @@ class AddRestaurantReviewViewModel(
     }
 
     fun removePhotoItem(uri: UriModel) {
-        uriList?.remove(uri)
+        uriList.remove(uri)
         fetchData()
     }
 
     fun submit(submitReviewModel: SubmitReviewModel) = viewModelScope.launch {
         addRestaurantReviewStateLiveData.value = AddRestaurantReviewState.Loading
 
-        if (uriList?.isNotEmpty() == true) {
+        if (uriList.isNotEmpty()) {
             val results = uploadPhoto()
             val errorResults = results.filterIsInstance<Pair<Uri, Exception>>()
             val successResults = results.filterIsInstance<String>()
@@ -100,28 +101,30 @@ class AddRestaurantReviewViewModel(
     }
 
     private suspend fun uploadPhoto() = withContext(Dispatchers.IO) {
-        val uploadDeferred: List<Deferred<Any>> = uriList!!.mapIndexed { index, uri ->
-            viewModelScope.async {
-                try {
-                    val fileName = "image_${index}.png"
-                    return@async storage
-                        .reference
-                        .child("article/photo")
-                        .child(fileName)
-                        .putFile(uri.uri)
-                        .await()
-                        .storage
-                        .downloadUrl
-                        .await()
-                        .toString()
-                } catch (e: Exception) {
-                    addRestaurantReviewStateLiveData.value = AddRestaurantReviewState.Error(
-                        R.string.request_error
-                    )
-                    return@async Pair(uri, e)
+        val uploadDeferred: List<Deferred<Any>> =
+            FileUtil.bitmapResize(uriList).mapIndexed { index, uri ->
+                viewModelScope.async {
+                    try {
+                        val fileName = "image_${index}.png"
+                        return@async storage
+                            .reference
+                            .child("article/photo")
+                            .child(fileName)
+                            .putFile(uri)
+                            .await()
+                            .storage
+                            .downloadUrl
+                            .await()
+                            .toString()
+                    } catch (e: Exception) {
+                        addRestaurantReviewStateLiveData.value = AddRestaurantReviewState.Error(
+                            R.string.request_error
+                        )
+                        return@async Pair(uri, e)
+                    }
                 }
             }
-        }
+
         return@withContext uploadDeferred.awaitAll()
     }
 

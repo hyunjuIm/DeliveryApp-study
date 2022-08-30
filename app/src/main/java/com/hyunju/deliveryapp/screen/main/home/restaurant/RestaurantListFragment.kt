@@ -1,8 +1,6 @@
 package com.hyunju.deliveryapp.screen.main.home.restaurant
 
-import android.util.Log
 import androidx.core.os.bundleOf
-import com.hyunju.deliveryapp.DeliveryApplication.Companion.APP_TAG
 import com.hyunju.deliveryapp.data.entity.LocationLatLngEntity
 import com.hyunju.deliveryapp.databinding.FragmentRestaurantListBinding
 import com.hyunju.deliveryapp.model.restaurant.RestaurantModel
