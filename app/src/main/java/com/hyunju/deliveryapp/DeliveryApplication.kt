@@ -26,7 +26,5 @@ class DeliveryApplication : Application() {
     companion object {
         var appContext: Context? = null
             private set
-
-        const val APP_TAG = "보아라"
     }
 }
