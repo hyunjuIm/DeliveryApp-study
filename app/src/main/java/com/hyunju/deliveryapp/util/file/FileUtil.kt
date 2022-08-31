@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
+import java.lang.NullPointerException
 import java.util.*
 
 object FileUtil {
@@ -25,50 +26,48 @@ object FileUtil {
     suspend fun bitmapResize(uriList: ArrayList<UriModel>): MutableList<Uri> {
         val photoHashMap = hashMapOf<Int, Uri>()
 
-        val job = CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             uriList.forEachIndexed { index, uriModel ->
                 launch {
-                    optimizeBitmap(uriModel).apply {
-                        photoHashMap[index] = Uri.fromFile(this?.let { File(it) })
+                    optimizeBitmap(uriModel.uri)?.let { path ->
+                        photoHashMap[index] = Uri.fromFile(File(path))
                     }
                 }
             }
-        }
-
-        job.join()
+        }.join()
 
         return photoHashMap.values.toMutableList()
     }
 
-    // 비트맵 최적화
-    private fun optimizeBitmap(uriModel: UriModel): String? {
-        val uri = uriModel.uri
-
+    private fun optimizeBitmap(uri: Uri): String? {
         try {
             val storage = appContext!!.cacheDir
             val fileName = String.format("%s.%s", UUID.randomUUID(), "jpg")
+
             val tempFile = File(storage, fileName)
             tempFile.createNewFile()
+
             val fos = FileOutputStream(tempFile)
 
-            val bitmap = resizeBitmapFormUri(uri).apply {
-                this?.let {
-                    rotateImageIfRequired(it, uri)
-                    compress(Bitmap.CompressFormat.JPEG, 100, fos)
-                }
-            }
-            bitmap?.recycle()
+            resizeBitmapFormUri(uri)?.apply {
+                rotateImageIfRequired(this, uri)
+                compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                recycle()
+            } ?: throw NullPointerException()
 
             fos.flush()
             fos.close()
 
             return tempFile.absolutePath
+
         } catch (e: IOException) {
             Log.e(TAG, "FileUtil - IOException: ${e.message}")
         } catch (e: FileNotFoundException) {
             Log.e(TAG, "FileUtil - FileNotFoundException: ${e.message}")
         } catch (e: OutOfMemoryError) {
             Log.e(TAG, "FileUtil - OutOfMemoryError: ${e.message}")
+        } catch (e: NullPointerException) {
+            Log.e(TAG, "FileUtil - NullPointerException: ${e.message}")
         } catch (e: Exception) {
             Log.e(TAG, "FileUtil - ${e.message}")
         }
@@ -81,10 +80,11 @@ object FileUtil {
 
         input.mark(input.available())
 
-        return BitmapFactory.Options().run {
+        var bitmap: Bitmap?
 
+        BitmapFactory.Options().run {
             inJustDecodeBounds = true
-            BitmapFactory.decodeStream(input, null, this)
+            bitmap = BitmapFactory.decodeStream(input, null, this)
 
             input.reset()
 
@@ -92,8 +92,12 @@ object FileUtil {
 
             inJustDecodeBounds = false
 
-            BitmapFactory.decodeStream(input, null, this)
+            bitmap = BitmapFactory.decodeStream(input, null, this)
         }
+
+        input.close()
+
+        return bitmap
     }
 
     private fun calculateInSampleSize(options: BitmapFactory.Options): Int {
@@ -107,8 +111,6 @@ object FileUtil {
 
             while (halfHeight / inSampleSize >= MAX_HEIGHT && halfWidth / inSampleSize >= MAX_WIDTH) {
                 inSampleSize *= 2
-
-                Log.d(TAG, "calculateInSampleSize: $inSampleSize")
             }
         }
 
@@ -125,8 +127,7 @@ object FileUtil {
         }
 
         return when (exif.getAttributeInt(
-            ExifInterface.TAG_ORIENTATION,
-            ExifInterface.ORIENTATION_NORMAL
+            ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL
         )) {
             ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90)
             ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180)
