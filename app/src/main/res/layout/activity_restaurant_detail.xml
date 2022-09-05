@@ -53,25 +53,26 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_margin="24dp"
-            android:src="@drawable/ic_shopping_basket"
+            app:backgroundTint="@color/dark_pink"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/white" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/basketCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
             android:elevation="16dp"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/basketButton"
-            app:layout_constraintEnd_toEndOf="@+id/basketButton"
-            app:layout_constraintHorizontal_bias="0.8"
-            app:layout_constraintStart_toStartOf="@+id/basketButton"
-            app:layout_constraintTop_toTopOf="@+id/basketButton"
-            app:layout_constraintVertical_bias="0.5"
+            app:drawableStartCompat="@drawable/ic_shopping_basket"
+            app:drawableTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="+1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

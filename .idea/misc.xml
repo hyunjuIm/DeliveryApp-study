@@ -12,6 +12,9 @@
         <entry key="app/src/main/res/drawable/ic_down.xml" value="0.192" />
         <entry key="app/src/main/res/drawable/ic_heart_disable.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/ic_heart_enable.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_location.xml" value="0.3255" />
+        <entry key="app/src/main/res/drawable/ic_refresh.xml" value="0.3255" />
+        <entry key="app/src/main/res/drawable/ic_shopping_basket.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_star.xml" value="0.192" />
         <entry key="app/src/main/res/drawable/ic_thunder.xml" value="0.192" />
         <entry key="app/src/main/res/layout/activity_add_restaurant_review.xml" value="0.2708333333333333" />
