@@ -37,7 +37,7 @@
     <string name="basket_count">+%d</string>
 
     <!-- menu -->
-    <string name="price">%d,원</string>
+    <string name="price">%d원</string>
     <string name="logout">로그아웃</string>
     <string name="empty_orders_text">주문 리스트가 존재하지 않습니다.</string>
     <string name="google_login_required_text">구글 로그인이 필요합니다.</string>
@@ -54,7 +54,7 @@
     <string name="user_id_not_found">사용자 id가 존재하지 않습니다.</string>
     <string name="fail_photo_to_get">사진을 가져오지 못했습니다.</string>
 
-    <string name="order_history_title">주문 내역 : %s</string>
+    <string name="order_history_title">[주문내역] %s</string>
     <string name="add_restaurant_review">%s 리뷰 등록</string>
     <string name="title">제목</string>
     <string name="content">내용</string>
