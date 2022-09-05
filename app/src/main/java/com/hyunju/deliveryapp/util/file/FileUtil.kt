@@ -49,8 +49,7 @@ object FileUtil {
 
             val fos = FileOutputStream(tempFile)
 
-            resizeBitmapFormUri(uri)?.apply {
-                rotateImageIfRequired(this, uri)
+            decodeBitmapFromUri(uri)?.apply {
                 compress(Bitmap.CompressFormat.JPEG, 100, fos)
                 recycle()
             } ?: throw NullPointerException()
@@ -75,10 +74,10 @@ object FileUtil {
         return null
     }
 
-    private fun resizeBitmapFormUri(uri: Uri): Bitmap? {
+    private fun decodeBitmapFromUri(uri: Uri): Bitmap? {
         val input = BufferedInputStream(appContext!!.contentResolver.openInputStream(uri))
 
-        input.mark(input.available())
+        input.mark(input.available()) // 입력 스트림의 특정 위치를 기억
 
         var bitmap: Bitmap?
 
@@ -86,13 +85,14 @@ object FileUtil {
             inJustDecodeBounds = true
             bitmap = BitmapFactory.decodeStream(input, null, this)
 
-            input.reset()
+            input.reset() // 입력 스트림의 마지막 mark 된 위치로 재설정
 
             inSampleSize = calculateInSampleSize(this)
-
             inJustDecodeBounds = false
 
-            bitmap = BitmapFactory.decodeStream(input, null, this)
+            bitmap = BitmapFactory.decodeStream(input, null, this)?.apply {
+                rotateImageIfRequired(this, uri)
+            }
         }
 
         input.close()
