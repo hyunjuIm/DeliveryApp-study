@@ -4,6 +4,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.hyunju.deliveryapp.R
 import com.hyunju.deliveryapp.databinding.ViewholderFoodMenuBinding
 import com.hyunju.deliveryapp.extensions.clear
+import com.hyunju.deliveryapp.extensions.fromNumberToPrice
 import com.hyunju.deliveryapp.extensions.load
 import com.hyunju.deliveryapp.model.restaurant.food.FoodModel
 import com.hyunju.deliveryapp.screen.base.BaseViewModel
@@ -28,7 +29,8 @@ class FoodMenuViewHolder(
             foodImage.load(model.imageUrl, 24f, CenterCrop())
             foodTitleText.text = model.title
             foodDescriptionText.text = model.description
-            priceText.text = resourcesProvider.getString(R.string.price, model.price)
+            priceText.text =
+                resourcesProvider.getString(R.string.price, model.price.fromNumberToPrice())
         }
     }
 

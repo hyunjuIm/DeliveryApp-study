@@ -9,6 +9,11 @@
         <entry key="app/src/main/res/drawable-v24/ic_check_disabled.xml" value="0.178" />
         <entry key="app/src/main/res/drawable-v24/ic_check_enabled.xml" value="0.178" />
         <entry key="app/src/main/res/drawable/bg_fillter_chip_state_list.xml" value="0.192" />
+        <entry key="app/src/main/res/drawable/bg_round_corner_4_white_line_gray.xml" value="0.2185" />
+        <entry key="app/src/main/res/drawable/bg_round_corner_6_dark_pink.xml" value="0.2185" />
+        <entry key="app/src/main/res/drawable/bg_round_corner_6_white_dark_pink.xml" value="0.2185" />
+        <entry key="app/src/main/res/drawable/bg_round_corner_8_white_line_gray.xml" value="0.2185" />
+        <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.313" />
         <entry key="app/src/main/res/drawable/ic_down.xml" value="0.192" />
         <entry key="app/src/main/res/drawable/ic_heart_disable.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/ic_heart_enable.xml" value="0.1765" />
@@ -17,14 +22,14 @@
         <entry key="app/src/main/res/drawable/ic_shopping_basket.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/ic_star.xml" value="0.192" />
         <entry key="app/src/main/res/drawable/ic_thunder.xml" value="0.192" />
-        <entry key="app/src/main/res/layout/activity_add_restaurant_review.xml" value="0.2708333333333333" />
+        <entry key="app/src/main/res/layout/activity_add_restaurant_review.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_camera.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/activity_gallery.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/activity_image_preview_list.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2776268115942029" />
         <entry key="app/src/main/res/layout/activity_my_location.xml" value="0.30344202898550726" />
         <entry key="app/src/main/res/layout/activity_order_menu_list.xml" value="0.25317028985507245" />
-        <entry key="app/src/main/res/layout/activity_restaurant_detail.xml" value="0.26766304347826086" />
+        <entry key="app/src/main/res/layout/activity_restaurant_detail.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.30344202898550726" />
         <entry key="app/src/main/res/layout/fragment_list.xml" value="0.26766304347826086" />
         <entry key="app/src/main/res/layout/fragment_my.xml" value="0.30344202898550726" />
@@ -35,7 +40,7 @@
         <entry key="app/src/main/res/layout/viewholder_gallery_photo_item.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/viewholder_image.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/viewholder_like_restaurant.xml" value="0.25317028985507245" />
-        <entry key="app/src/main/res/layout/viewholder_order.xml" value="0.15653495440729484" />
+        <entry key="app/src/main/res/layout/viewholder_order.xml" value="0.33" />
         <entry key="app/src/main/res/layout/viewholder_order_menu.xml" value="0.25317028985507245" />
         <entry key="app/src/main/res/layout/viewholder_photo_item.xml" value="0.2708333333333333" />
         <entry key="app/src/main/res/layout/viewholder_restaurant.xml" value="0.30344202898550726" />

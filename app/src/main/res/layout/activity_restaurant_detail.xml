@@ -31,15 +31,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/menuAndReviewTabLayout" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -142,6 +133,8 @@
                             android:id="@+id/ratingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:progressTint="@color/orange_yellow"
                             app:layout_constraintEnd_toStartOf="@id/ratingTextView"
                             app:layout_constraintHorizontal_chainStyle="packed"
                             app:layout_constraintStart_toStartOf="parent"
@@ -174,7 +167,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:background="@null"
+                                android:background="@android:color/transparent"
                                 android:backgroundTint="@color/white"
                                 android:text="@string/call"
                                 android:textColor="@color/black"
@@ -191,7 +184,7 @@
                                     android:id="@+id/likeButton"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@null"
+                                    android:background="@android:color/transparent"
                                     android:backgroundTint="@color/white"
                                     android:textColor="@color/black"
                                     android:textSize="16sp" />
@@ -220,7 +213,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:background="@null"
+                                android:background="@android:color/transparent"
                                 android:backgroundTint="@color/white"
                                 android:text="@string/share"
                                 android:textColor="@color/black"
@@ -301,5 +294,12 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:theme="@style/Widget.Delivery.ProgressBar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

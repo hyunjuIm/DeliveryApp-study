@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
@@ -63,7 +64,7 @@ class RestaurantDetailActivity :
 
     private fun initAppBar() = with(binding) {
         appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val topPadding = 300f.fromDpToPx().toFloat()
+            val topPadding = 1f.fromDpToPx().toFloat()
             val realAlphaScrollHeight = appBarLayout.measuredHeight - appBarLayout.totalScrollRange
             val abstractOffset = abs(verticalOffset)
 
@@ -72,23 +73,29 @@ class RestaurantDetailActivity :
 
             if (abstractOffset < topPadding) {
                 restaurantTitleTextView.alpha = 0f
+                toolbar.setBackgroundColor(Color.parseColor("#00000000"))
                 return@OnOffsetChangedListener
             }
 
             val percentage = realAlphaVerticalOffset / realAlphaScrollHeight
             restaurantTitleTextView.alpha =
                 1 - (if (1 - percentage * 2 < 0) 0f else 1 - percentage * 2)
+            toolbar.setBackgroundColor(Color.parseColor("#FFFFFF"))
         })
+
         toolbar.setNavigationOnClickListener { finish() }
+
         callButton.setOnClickListener {
             viewModel.getRestaurantTelNumber()?.let { telNumber ->
                 val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$telNumber"))
                 startActivity(intent)
             }
         }
+
         likeButton.setOnClickListener {
             viewModel.toggleLikedRestaurant()
         }
+
         shareButton.setOnClickListener {
             viewModel.getRestaurantInfo()?.let { restaurantInfo ->
                 val intent = Intent(Intent.ACTION_SEND).apply {

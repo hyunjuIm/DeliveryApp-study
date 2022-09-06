@@ -28,9 +28,11 @@
 
     <Button
         android:id="@+id/logoutButton"
+        style="@style/Widget.Delivery.DarkPinkButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:minHeight="0dp"
         android:text="@string/logout"
         app:layout_constraintBottom_toBottomOf="@id/userNameTextView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +50,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,16 +69,6 @@
         app:layout_constraintStart_toStartOf="@id/recyclerView"
         app:layout_constraintTop_toTopOf="@id/recyclerView"
         tools:visibility="visible" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/loginRequiredGroup"
@@ -104,5 +96,16 @@
         app:layout_constraintEnd_toEndOf="@id/loginButton"
         app:layout_constraintStart_toStartOf="@id/loginButton"
         app:layout_constraintTop_toBottomOf="@id/loginButton" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/Widget.Delivery.ProgressBar"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
