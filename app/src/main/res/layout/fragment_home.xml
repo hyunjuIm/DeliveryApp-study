@@ -19,7 +19,8 @@
             android:id="@+id/locationLoading"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:theme="@style/Widget.Delivery.ProgressBar" />
 
         <TextView
             android:id="@+id/locationTitleText"

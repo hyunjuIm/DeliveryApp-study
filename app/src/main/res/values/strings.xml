@@ -37,7 +37,7 @@
     <string name="basket_count">+%d</string>
 
     <!-- menu -->
-    <string name="price">%d원</string>
+    <string name="price">%s원</string>
     <string name="logout">로그아웃</string>
     <string name="empty_orders_text">주문 리스트가 존재하지 않습니다.</string>
     <string name="google_login_required_text">구글 로그인이 필요합니다.</string>
@@ -72,5 +72,6 @@
 
     <!-- Review -->
     <string name="success_upload_review">리뷰가 성공적으로 업로드 되었습니다.</string>
+    <string name="empty_reviews_text">리뷰가 존재하지 않습니다.</string>
 
 </resources>

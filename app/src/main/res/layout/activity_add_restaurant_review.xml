@@ -33,7 +33,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_round_corner_4_white_line_gray"
         android:hint="@string/title"
+        android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
@@ -44,20 +46,41 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:progressTint="@color/orange_yellow"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/titleEditText"
         app:layout_constraintTop_toBottomOf="@id/titleEditText" />
 
     <EditText
         android:id="@+id/contentEditText"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_round_corner_4_white_line_gray"
+        android:gravity="top"
         android:hint="@string/content"
+        android:inputType="textMultiLine"
+        android:maxHeight="200dp"
+        android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ratingBar" />
+
+    <Button
+        android:id="@+id/imageAddButton"
+        style="@style/Widget.Delivery.DarkPinkLineButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/add_image"
+        app:backgroundTint="@null"
+        app:icon="@drawable/ic_camera"
+        app:iconGravity="textStart"
+        app:iconTint="@color/dark_pink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contentEditText" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/photoRecyclerView"
@@ -67,24 +90,16 @@
         android:orientation="vertical"
         android:paddingHorizontal="8dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/imageAddButton"
+        app:layout_constraintBottom_toTopOf="@id/submitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contentEditText"
-        app:spanCount="2"
+        app:layout_constraintTop_toBottomOf="@+id/imageAddButton"
+        app:spanCount="5"
         tools:itemCount="10" />
 
     <Button
-        android:id="@+id/imageAddButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/add_image"
-        app:layout_constraintBottom_toTopOf="@id/submitButton"
-        app:layout_constraintEnd_toEndOf="@id/submitButton"
-        app:layout_constraintStart_toStartOf="@id/submitButton" />
-
-    <Button
         android:id="@+id/submitButton"
+        style="@style/Widget.Delivery.DarkPinkButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -99,6 +114,7 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:theme="@style/Widget.Delivery.ProgressBar"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
