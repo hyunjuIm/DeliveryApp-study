@@ -1,5 +1,7 @@
 package com.hyunju.deliveryapp.di
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.hyunju.deliveryapp.data.network.FoodApiService
 import com.hyunju.deliveryapp.data.network.MapApiService
 import com.hyunju.deliveryapp.data.url.Url
@@ -40,8 +42,14 @@ fun provideFoodRetrofit(
         .build()
 }
 
-fun provideGsonConverterFactory(): GsonConverterFactory {
-    return GsonConverterFactory.create()
+fun provideGson(): Gson {
+    return GsonBuilder().setLenient().create()
+}
+
+fun provideGsonConverterFactory(
+    gson: Gson
+): GsonConverterFactory {
+    return GsonConverterFactory.create(gson)
 }
 
 fun buildOkHttpClient(): OkHttpClient {

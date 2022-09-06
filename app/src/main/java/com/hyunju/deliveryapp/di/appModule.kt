@@ -78,7 +78,8 @@ val appModule = module {
     single<RestaurantReviewRepository> { DefaultRestaurantReviewRepository(get(), get()) }
     single<OrderRepository> { DefaultOrderRepository(get(), get()) }
 
-    single { provideGsonConverterFactory() }
+    single { provideGson() }
+    single { provideGsonConverterFactory(get()) }
     single { buildOkHttpClient() }
 
     single(named("map")) { provideMapRetrofit(get(), get()) }
