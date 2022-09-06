@@ -1,6 +1,7 @@
 package com.hyunju.deliveryapp.screen.main.home.restaurant.detail.review
 
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import com.hyunju.deliveryapp.databinding.FragmentListBinding
 import com.hyunju.deliveryapp.model.restaurant.review.RestaurantReviewModel
 import com.hyunju.deliveryapp.screen.base.BaseFragment
@@ -61,6 +62,7 @@ class RestaurantReviewListFragment :
     }
 
     private fun handleSuccess(state: RestaurantReviewState.Success) {
+        binding.emptyResultTextView.isVisible = state.reviewList.isEmpty()
         adapter.submitList(state.reviewList)
     }
 
