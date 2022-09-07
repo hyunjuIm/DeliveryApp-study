@@ -34,6 +34,9 @@
 
 - RecyclerView를 사용할 때, 데이터를 많이 가진 리스트(주변 식당 데이터, 갤러리 사진들 등)를 변경하는 작업에서 데이터 하나만 바뀌어도 리스트 전체를 업데이트 하는 `notifyDataSetChanged()` 호출이 얼마나 비효율적인지 몸소 깨달았다. 이제는 oldItem, newItem의 두 데이터셋을 비교하여 값이 변경된 부분만 RecyclerView에게 알려주는 `DiffUtil`을 사용할 것이다.
 
+- 테스트 코드를 처음 작성해봤다. 잘못 작성된 부분을 빠르게 확인할 수 있고, 디버깅 및 기기를 통해 UI로 직접 입력하는 시간을 단축할 수 있어 좋았다. 프로젝트가 커질수록 안정성과 신뢰성이 높아지는데 큰 기여를 할 것 같다. 하지만 오류도 참 많이 만났다. 아직은 어려워서 더 열심히 공부해야겠다. 사용하다보니 왜 의존성 없는 코드를 작성해야하는지 알겠다.<br>
+[📝 기술 블로그 : 안드로이드 UnitTest에서 LiveData 사용시 오류 - Method getMainLooper in android.os.Looper not mocked.](https://velog.io/@dear_jjwim/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-UnitTest%EC%97%90%EC%84%9C-LiveData-%EC%82%AC%EC%9A%A9%EC%8B%9C-%EC%98%A4%EB%A5%98-Method-getMainLooper-in-android.os.Looper-not-mocked)
+
 <br>
 
 > ## 주요기능 및 결과화면
