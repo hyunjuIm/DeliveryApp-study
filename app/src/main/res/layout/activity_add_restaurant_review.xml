@@ -26,85 +26,89 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/titleEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_round_corner_4_white_line_gray"
-        android:hint="@string/title"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:progressTint="@color/orange_yellow"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/titleEditText"
-        app:layout_constraintTop_toBottomOf="@id/titleEditText" />
-
-    <EditText
-        android:id="@+id/contentEditText"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_round_corner_4_white_line_gray"
-        android:gravity="top"
-        android:hint="@string/content"
-        android:inputType="textMultiLine"
-        android:maxHeight="200dp"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ratingBar" />
-
-    <Button
-        android:id="@+id/imageAddButton"
-        style="@style/Widget.Delivery.DarkPinkLineButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="@string/add_image"
-        app:backgroundTint="@null"
-        app:icon="@drawable/ic_camera"
-        app:iconGravity="textStart"
-        app:iconTint="@color/dark_pink"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contentEditText" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/photoRecyclerView"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:orientation="vertical"
-        android:paddingHorizontal="8dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/submitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageAddButton"
-        app:spanCount="5"
-        tools:itemCount="10" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/submitButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <EditText
+                android:id="@+id/titleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_round_corner_4_white_line_gray"
+                android:hint="@string/title"
+                android:padding="12dp" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:progressTint="@color/orange_yellow" />
+
+            <EditText
+                android:id="@+id/contentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_round_corner_4_white_line_gray"
+                android:gravity="top"
+                android:hint="@string/content"
+                android:inputType="textMultiLine"
+                android:maxHeight="200dp"
+                android:padding="12dp" />
+
+            <Button
+                android:id="@+id/imageAddButton"
+                style="@style/Widget.Delivery.GreenLineButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/add_image"
+                app:icon="@drawable/ic_camera"
+                app:iconGravity="textStart"
+                app:iconTint="@color/green" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/photoRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp"
+                android:scrollbars="none"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="5"
+                tools:itemCount="10" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <Button
         android:id="@+id/submitButton"
-        style="@style/Widget.Delivery.DarkPinkButton"
+        style="@style/Widget.Delivery.LemonYellowButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="16dp"
         android:text="@string/registration"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
