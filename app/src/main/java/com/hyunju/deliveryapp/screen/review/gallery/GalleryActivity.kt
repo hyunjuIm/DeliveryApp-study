@@ -3,6 +3,7 @@ package com.hyunju.deliveryapp.screen.review.gallery
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -73,8 +74,7 @@ class GalleryActivity : BaseActivity<GalleryViewModel, ActivityGalleryBinding>()
         progressBar.isGone = true
         recyclerView.isVisible = true
 
-        adapter.submitList(state.photoList)
-        adapter.notifyDataSetChanged()
+        adapter.submitList(state.photoList.toList())
     }
 
     private fun handleConfirm(state: GalleryState.Confirm) {
