@@ -65,8 +65,7 @@ class ImagePreviewListActivity :
     }
 
     private fun bindViews(previewList: MutableList<PreviewImageModel>?) = with(binding) {
-        adapter.submitList(previewList)
-        adapter.notifyDataSetChanged()
+        adapter.submitList(previewList?.toList())
 
         imageViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

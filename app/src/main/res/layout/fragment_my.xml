@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/profileImageView"
         app:layout_constraintStart_toStartOf="@id/profileImageView"
@@ -28,11 +28,12 @@
 
     <Button
         android:id="@+id/logoutButton"
-        style="@style/Widget.Delivery.DarkPinkButton"
+        style="@style/Widget.Delivery.LemonYellowButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:minHeight="0dp"
+        android:textSize="14sp"
         android:text="@string/logout"
         app:layout_constraintBottom_toBottomOf="@id/userNameTextView"
         app:layout_constraintEnd_toEndOf="parent"

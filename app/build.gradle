@@ -7,6 +7,10 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+// 선언 및 키값을 불러오기
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdk 32
 
@@ -21,9 +25,23 @@ android {
     }
 
     buildTypes {
+        debug {
+            resValue ("string", "TMAP_API_KEY", properties["TMAP_API_KEY"])
+            resValue ("string", "GOOGLE_MAP_API_KEY", properties["GOOGLE_MAP_API_KEY"])
+
+            buildConfigField "String", "TMAP_API_KEY", properties["TMAP_API_KEY"]
+            buildConfigField "String", "GOOGLE_MAP_API_KEY", properties["GOOGLE_MAP_API_KEY"]
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            resValue ("string", "TMAP_API_KEY", properties["TMAP_API_KEY"])
+            resValue ("string", "GOOGLE_MAP_API_KEY", properties["GOOGLE_MAP_API_KEY"])
+
+            buildConfigField "String", "TMAP_API_KEY", properties["TMAP_API_KEY"]
+            buildConfigField "String", "GOOGLE_MAP_API_KEY", properties["GOOGLE_MAP_API_KEY"]
         }
     }
     compileOptions {
@@ -36,7 +54,7 @@ android {
     viewBinding {
         enabled = true
     }
-    dataBinding{
+    dataBinding {
         enabled = true
     }
     testOptions {

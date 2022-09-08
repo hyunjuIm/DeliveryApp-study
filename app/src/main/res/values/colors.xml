@@ -12,6 +12,11 @@
     <color name="gray_168">#A8A8A8</color>
     <color name="gray">#393939</color>
 
+    <color name="orange">#EC8B5E</color>
     <color name="orange_yellow">#FFCA42</color>
-    <color name="brown">#914300</color>
+    <color name="lemon_yellow">#FFE77A</color>
+
+    <color name="brown">#755139</color>
+
+    <color name="green">#2C5F2D</color>
 </resources>

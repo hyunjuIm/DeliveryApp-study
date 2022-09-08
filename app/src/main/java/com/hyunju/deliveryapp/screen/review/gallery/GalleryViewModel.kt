@@ -25,8 +25,7 @@ class GalleryViewModel : BaseViewModel() {
     }
 
     fun selectPhoto(galleryPhotoModel: GalleryPhotoModel) {
-        val findGalleryPhoto = photoList.find { it.id == galleryPhotoModel.id }
-        findGalleryPhoto?.let { photo ->
+        photoList.find { it.id == galleryPhotoModel.id }?.let { photo ->
             photoList[photoList.indexOf(photo)] = photo.copy(isSelected = photo.isSelected.not())
             galleryStateLiveData.value = GalleryState.Success(
                 photoList = photoList

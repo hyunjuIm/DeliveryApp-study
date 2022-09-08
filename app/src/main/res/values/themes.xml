@@ -6,8 +6,8 @@
         <item name="toolbarWithCloseStyle">@style/Widget.Delivery.Toolbar.WithClose</item>
 
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/dark_pink</item>
-        <item name="colorPrimaryVariant">@color/pink</item>
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimaryVariant">@color/green</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorOnSecondary">@color/black</item>

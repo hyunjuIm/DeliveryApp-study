@@ -33,6 +33,25 @@ class GalleryPhotoItemViewHolder(
                     R.drawable.ic_check_disabled
             )
         )
+        if (model.isSelected) {
+            checkButton.run {
+                setImageDrawable(
+                    ContextCompat.getDrawable(
+                        binding.root.context, R.drawable.ic_check_enabled
+                    )
+                )
+                setBackgroundResource(R.drawable.bg_round_corner_8_green)
+            }
+        } else {
+            checkButton.run {
+                setImageDrawable(
+                    ContextCompat.getDrawable(
+                        binding.root.context, R.drawable.ic_check_disabled
+                    )
+                )
+                setBackgroundResource(R.drawable.bg_round_corner_8_gray)
+            }
+        }
     }
 
     override fun bindViews(model: GalleryPhotoModel, adapterListener: AdapterListener) =
