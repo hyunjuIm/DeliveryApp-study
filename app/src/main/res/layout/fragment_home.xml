@@ -39,6 +39,9 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:visibility="gone"
+        app:tabIndicatorColor="@color/brown"
+        app:tabSelectedTextColor="@color/brown"
+        app:tabRippleColor="@color/lemon_yellow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -90,7 +93,7 @@
                 android:visibility="gone"
                 app:chipIcon="@drawable/ic_refresh"
                 app:chipIconEnabled="true"
-                app:chipIconTint="@color/icon_filter_chip_state_list_reset"
+                app:chipIconTint="@color/orange_yellow"
                 tools:visibility="visible" />
 
             <com.google.android.material.chip.Chip
@@ -101,7 +104,7 @@
                 android:text="@string/fast_delivery"
                 app:chipIcon="@drawable/ic_thunder"
                 app:chipIconEnabled="true"
-                app:chipIconTint="@color/icon_filter_chip_state_list_delivery_fast" />
+                app:chipIconTint="@color/design_default_color_primary_dark" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipLowDeliveryTip"
@@ -111,7 +114,7 @@
                 android:text="@string/low_delivery_tip"
                 app:chipIcon="@drawable/ic_down"
                 app:chipIconEnabled="true"
-                app:chipIconTint="@color/icon_filter_chip_state_list_delivery_tip" />
+                app:chipIconTint="@color/orange_yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipDefault"
@@ -129,7 +132,7 @@
                 android:text="@string/top_rate"
                 app:chipIcon="@drawable/ic_star"
                 app:chipIconEnabled="true"
-                app:chipIconTint="@color/icon_filter_chip_state_list_reset" />
+                app:chipIconTint="@color/orange_yellow" />
 
         </com.google.android.material.chip.ChipGroup>
 
@@ -158,7 +161,7 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_margin="24dp"
-            app:backgroundTint="@color/dark_pink"
+            app:backgroundTint="@color/green"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -170,10 +173,10 @@
             android:layout_marginBottom="24dp"
             android:elevation="16dp"
             android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@color/white"
+            android:textColor="@color/lemon_yellow"
             android:textSize="16sp"
             app:drawableStartCompat="@drawable/ic_shopping_basket"
-            app:drawableTint="@color/white"
+            app:drawableTint="@color/lemon_yellow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

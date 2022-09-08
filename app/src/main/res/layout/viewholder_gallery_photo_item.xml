@@ -24,7 +24,8 @@
             android:layout_height="24dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_round_corner_8_black"
+            android:src="@drawable/ic_check_disabled"
+            android:background="@drawable/bg_round_corner_8_gray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

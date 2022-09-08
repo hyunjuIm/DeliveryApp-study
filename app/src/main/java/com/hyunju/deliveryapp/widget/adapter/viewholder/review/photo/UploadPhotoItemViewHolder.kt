@@ -26,7 +26,7 @@ class UploadPhotoItemViewHolder(
 
     override fun bindViews(model: UriModel, adapterListener: AdapterListener) = with(binding) {
         if (adapterListener is PhotoListListener) {
-            closeButton.setOnClickListener {
+            photoImageView.setOnClickListener {
                 adapterListener.removePhoto(model)
             }
         }
