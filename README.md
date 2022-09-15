@@ -39,6 +39,22 @@
 
 <br>
 
-> ## 주요기능 및 결과화면
+> ## 결과화면
 ❗️ Backendless로 개발하여 Mock data가 섞여있습니다.
+|메인화면 - 홈|위치 변경|메인화면 - 찜|
+|------|---|---|
+|![Screenshot_20220915-235712_DeliveryApp](https://user-images.githubusercontent.com/68545018/190451011-d418661e-c873-4149-8fdc-2bd4e65d12b9.jpg)|![Screenshot_20220915-235842_DeliveryApp](https://user-images.githubusercontent.com/68545018/190451565-fed590c9-688b-4864-aee2-3882ce1ddc85.jpg)|![Screenshot_20220916-000110_DeliveryApp](https://user-images.githubusercontent.com/68545018/190452344-fac7955c-b623-43d2-8712-62b8a5d86eca.jpg)|
+
+|식당 상세 화면|식당 상세 화면 (스크롤시 상단바)|식당 상세 화면 (리뷰)|
+|------|---|---|
+|![Screenshot_20220915-235946_DeliveryApp](https://user-images.githubusercontent.com/68545018/190452948-a8a22d06-dfcb-41f7-bed1-d71bcb04de02.jpg)|![Screenshot_20220916-000051_DeliveryApp](https://user-images.githubusercontent.com/68545018/190453009-722bb3ce-8dfd-4d72-8e4b-bd927321ffc9.jpg)|![Screenshot_20220916-005134_DeliveryApp](https://user-images.githubusercontent.com/68545018/190453072-a2a3cacd-ebaa-4e99-9036-f91d0a9dcfc4.jpg)|
+
+|리뷰 작성|리뷰 사진 첨부 - 갤러리|리뷰 사진 첨부 - 카메라|
+|------|---|---|
+|![Screenshot_20220916-005012_DeliveryApp](https://user-images.githubusercontent.com/68545018/190453593-344513d4-5ad6-4cd9-9e09-d756b139f4e3.jpg)|![image](https://user-images.githubusercontent.com/68545018/190454352-444e195c-7f48-4ec1-ad65-bfe6f74eb223.png)|![Screenshot_20220916-005005_DeliveryApp](https://user-images.githubusercontent.com/68545018/190453637-fad77de9-42e2-4c90-8f3e-8070d8563685.jpg)
+
+|장바구니 및 주문|메인화면 - My (로그인 전)|메인화면 - My (로그인 후)|
+|------|---|---|
+|![Screenshot_20220916-000001_DeliveryApp](https://user-images.githubusercontent.com/68545018/190454820-bb427ccd-7309-4b78-83f5-e9dcbfeaed89.jpg)|![Screenshot_20220916-000114_DeliveryApp](https://user-images.githubusercontent.com/68545018/190454861-6f40ef15-c7cb-4655-8b4d-b68c4ea9bacd.jpg)|![Screenshot_20220916-004812_DeliveryApp](https://user-images.githubusercontent.com/68545018/190454889-f94a773a-a8ea-4fbe-962b-22e5af8fbf04.jpg)|
+
 
